@@ -15,13 +15,7 @@ public class LoginController {
     @FXML
     private Button closeButton;
 
-    private void goToNextWindow(ActionEvent actionEvent, String path) throws IOException {
-        Parent log_root = FXMLLoader.load(getClass().getResource(path));
-        Scene scene = new Scene(log_root, 600, 700);
-        Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        window.setScene(scene);
-        window.show();
-    }
+
 
     @FXML
     private void closeButtonAction(ActionEvent actionEvent) {
@@ -30,7 +24,13 @@ public class LoginController {
     }
 
     @FXML
-    private void backButtonAction(ActionEvent actionEvent) throws IOException {
-        goToNextWindow(actionEvent, "/resources/sample.fxml");
+    public void backButtonAction(ActionEvent actionEvent) throws IOException {
+        Controller  window = new Controller();
+        window.goToNextWindow(actionEvent, "/resources/sample.fxml");
+    }
+
+    @FXML
+    private void loginButtonAction(ActionEvent actionEvent){
+        System.out.println("Zaloguj mnie");
     }
 }
