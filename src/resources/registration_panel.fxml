@@ -6,7 +6,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="600.0" style="-fx-background-color: burlywood; -fx-border-color: black; -fx-border-width: 12;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.RegistrationController">
    <children>
       <Text layoutX="125.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rejestracja" textAlignment="CENTER" wrappingWidth="348.5367431640625">
@@ -24,7 +23,7 @@
       <TextField fx:id="emailLabel" layoutX="298.0" layoutY="428.0" />
       <TextField fx:id="phoneoneLabel" layoutX="298.0" layoutY="476.0" />
       <TextField fx:id="phonetwoLabel" layoutX="297.0" layoutY="524.0" />
-      <Button layoutX="224.0" layoutY="609.0" mnemonicParsing="false" onAction="#registrationButtonAction" prefHeight="49.0" prefWidth="146.0" text="Zarejetruj!">
+      <Button layoutX="224.0" layoutY="609.0" mnemonicParsing="false" onAction="#registrationButtonAction" prefHeight="49.0" prefWidth="146.0" text="Zarejestruj!">
          <font>
             <Font name="System Bold Italic" size="15.0" />
          </font>

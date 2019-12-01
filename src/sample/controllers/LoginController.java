@@ -26,7 +26,7 @@ public class LoginController {
     @FXML
     public void backButtonAction(ActionEvent actionEvent) throws IOException {
         Controller  window = new Controller();
-        window.goToNextWindow(actionEvent, "/resources/sample.fxml");
+        window.goToNextWindow(actionEvent, "/resources/sample.fxml",600,700);
     }
 
     @FXML

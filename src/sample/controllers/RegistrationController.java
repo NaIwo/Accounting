@@ -47,7 +47,7 @@ public class RegistrationController {
                 checkEmail(window_operation) &&
                 checkPostCode(window_operation) &&
                 checkPhoneNumber(window_operation)) {
-            window_operation.goToNextWindow(actionEvent, "/resources/nickname_panel.fxml");
+            window_operation.goToNextWindow(actionEvent, "/resources/nickname_panel.fxml",600,700);
         }
     }
     private boolean checkPostCode(Controller window_operation)

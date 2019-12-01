@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
+
 import java.io.IOException;
 
 public class NicknameController {
@@ -33,6 +34,6 @@ public class NicknameController {
     @FXML
     public void backButtonAction(ActionEvent actionEvent) throws IOException {
         Controller window = new Controller();
-        window.goToNextWindow(actionEvent, "/resources/registration_panel.fxml");
+        window.goToNextWindow(actionEvent, "/resources/registration_panel.fxml",600,700);
     }
 }

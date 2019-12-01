@@ -22,9 +22,9 @@ public class Controller {
     @FXML
     private Button registerButton;
 
-    public void goToNextWindow(ActionEvent actionEvent, String path) throws IOException {
+    public void goToNextWindow(ActionEvent actionEvent, String path, int width, int height) throws IOException {
         Parent log_root = FXMLLoader.load(getClass().getResource(path));
-        Scene scene = new Scene(log_root, 600, 700);
+        Scene scene = new Scene(log_root, width, height);
         Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         window.setScene(scene);
         window.show();
@@ -49,10 +49,14 @@ public class Controller {
 
     @FXML
     private void goToRegistration(ActionEvent actionEvent)throws IOException {
-        goToNextWindow(actionEvent, "/resources/registration_panel.fxml");
+        goToNextWindow(actionEvent, "/resources/registration_panel.fxml", 600, 700);
     }
     @FXML
     private void goToLogin(ActionEvent actionEvent) throws IOException {
-        goToNextWindow(actionEvent, "/resources/log_panel.fxml");
+
+        // BY NIE MUSIEC SIE CIAGLE REJETROWAC xDDDD
+        goToNextWindow(actionEvent, "/resources/main_panel.fxml",1200,700);
+
+        //goToNextWindow(actionEvent, "/resources/log_panel.fxml",600,700);
     }
 }
