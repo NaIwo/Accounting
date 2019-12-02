@@ -2,16 +2,25 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="600.0" style="-fx-background-color: burlywood;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.Controller">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="600.0" style="-fx-background-color: burlywood; -fx-border-color: black; -fx-border-width: 12;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.Controller">
    <children>
-      <Text layoutX="122.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Accounting">
+      <Text layoutX="227.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Moja">
          <font>
-            <Font size="71.0" />
+            <Font size="65.0" />
          </font>
+         <fill>
+            <LinearGradient endX="0.6603053580713636" endY="0.16412218108431983" startX="0.41221374773797187" startY="0.6908396728166187">
+               <stops>
+                  <Stop color="#3014ba" />
+                  <Stop color="#cd0888" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </fill>
       </Text>
       <Button fx:id="loginButton" layoutX="170.0" layoutY="344.0" mnemonicParsing="false" onAction="#goToLogin" prefHeight="61.0" prefWidth="260.0" text="Zaloguj się">
          <font>
@@ -28,5 +37,18 @@
             <Font size="19.0" />
          </font>
       </Button>
+      <Text layoutX="133.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Księgowość">
+         <font>
+            <Font size="65.0" />
+         </font>
+         <fill>
+            <LinearGradient endX="0.6603053580713636" endY="0.16412218108431983" startX="0.41221374773797187" startY="0.6908396728166187">
+               <stops>
+                  <Stop color="#a82020" />
+                  <Stop color="#96aa00" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </fill>
+      </Text>
    </children>
 </Pane>

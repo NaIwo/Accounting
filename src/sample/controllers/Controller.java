@@ -6,11 +6,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import sample.WindowOperation;
 
 import java.io.IOException;
-import java.sql.Statement;
 
 public class Controller {
 
@@ -21,6 +22,9 @@ public class Controller {
     @FXML
     private Button registerButton;
 
+    private WindowOperation newWindow = new WindowOperation();
+
+
     @FXML
     private void closeButtonAction(ActionEvent actionEvent) {
         Stage stage = (Stage) closeButton.getScene().getWindow();
@@ -28,15 +32,12 @@ public class Controller {
     }
 
     @FXML
-    private void goToRegistration(ActionEvent actionEvent) {
-        System.out.println("Idz do rejestracji!");
+    private void goToRegistration(ActionEvent actionEvent) throws IOException {
+        newWindow.goToNextWindow(actionEvent, "/resources/registration_panel.fxml", 600, 700);
     }
+
     @FXML
     private void goToLogin(ActionEvent actionEvent) throws IOException {
-        Parent log_root = FXMLLoader.load(getClass().getResource("/resources/log_panel.fxml"));
-        Scene scene = new Scene(log_root, 600, 700);
-        Stage window = (Stage)((Node) actionEvent.getSource()).getScene().getWindow();
-        window.setScene(scene);
-        window.show();
+        newWindow.goToNextWindow(actionEvent, "/resources/log_panel.fxml", 600, 700);
     }
 }

@@ -9,12 +9,13 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("../resources/sample.fxml"));
         Image icon = new Image("resources/images/icon.jpg");
         primaryStage.getIcons().add(icon);
-        primaryStage.setTitle("Accounting Application");
+        primaryStage.setTitle("Moja Księgowość");
         primaryStage.setScene(new Scene(root, 600, 700));
         primaryStage.show();
     }

@@ -2,26 +2,29 @@ package sample.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import sample.SqlConnection;
+import sample.WindowOperation;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class LoginController {
     @FXML
+    private TextField loginLabel;
+    @FXML
+    private PasswordField passwordLabel;
+    @FXML
     private Button closeButton;
+    public static String loginLogin;
 
-    private void goToNextWindow(ActionEvent actionEvent, String path) throws IOException {
-        Parent log_root = FXMLLoader.load(getClass().getResource(path));
-        Scene scene = new Scene(log_root, 600, 700);
-        Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        window.setScene(scene);
-        window.show();
-    }
 
     @FXML
     private void closeButtonAction(ActionEvent actionEvent) {
@@ -30,7 +33,38 @@ public class LoginController {
     }
 
     @FXML
-    private void backButtonAction(ActionEvent actionEvent) throws IOException {
-        goToNextWindow(actionEvent, "/resources/sample.fxml");
+    public void backButtonAction(ActionEvent actionEvent) throws IOException {
+        WindowOperation window = new WindowOperation();
+        window.goToNextWindow(actionEvent, "/resources/sample.fxml", 600, 700);
+    }
+
+    @FXML
+    private void loginButtonAction(ActionEvent actionEvent) throws IOException, SQLException {
+        SqlConnection sqlConnection = new SqlConnection();
+        if (sqlConnection.connect()) {
+            WindowOperation window = new WindowOperation();
+            if (checkFields() && readData(sqlConnection.getConnection())) {
+                loginLogin = loginLabel.getText();
+                window.goToNextWindow(actionEvent, "/resources/main_panel.fxml", 1200, 700);
+            } else {
+                window.warrningWindow("Niepoprawne dane", "Podano niepoprawne dane logowania", "Sprawdz poprawnosc wprowadzonych danych", Alert.AlertType.WARNING);
+            }
+
+        } else
+            System.out.println("Nie udało się połączyć z bazą danych");
+    }
+
+    private boolean checkFields() {
+        return !loginLabel.getText().equals("") && !passwordLabel.getText().equals("");
+    }
+
+    private boolean readData(Connection conn) throws SQLException {
+        boolean result;
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT login, haslo from Dane_logowania where login='" + loginLabel.getText() + "' and haslo='" + passwordLabel.getText() + "'");
+        result = rs.next();
+        rs.close();
+        stmt.close();
+        return result;
     }
 }
