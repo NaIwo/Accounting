@@ -66,12 +66,12 @@
       <TextField fx:id="store" layoutX="29.0" layoutY="474.0" promptText="Sklep" style="-fx-background-color: antiquewhite;" />
       <TextField fx:id="category" layoutX="212.0" layoutY="474.0" promptText="Kategoria" style="-fx-background-color: antiquewhite;" />
       <Separator layoutX="15.0" layoutY="623.0" prefHeight="9.0" prefWidth="571.0" />
-      <Button layoutX="50.0" layoutY="574.0" mnemonicParsing="false" onAction="#addStore" prefHeight="28.0" prefWidth="106.0" style="-fx-background-color: lightcoral;" text="Usuń sklep">
+      <Button layoutX="50.0" layoutY="574.0" mnemonicParsing="false" onAction="#removeStore" prefHeight="28.0" prefWidth="106.0" style="-fx-background-color: lightcoral;" text="Usuń sklep">
          <font>
             <Font name="Arial Bold Italic" size="12.0" />
          </font>
       </Button>
-      <Button layoutX="224.0" layoutY="575.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="125.0" style="-fx-background-color: lightcoral;" text="Usuń kategorię">
+      <Button layoutX="224.0" layoutY="575.0" mnemonicParsing="false" onAction="#removeCategory" prefHeight="28.0" prefWidth="125.0" style="-fx-background-color: lightcoral;" text="Usuń kategorię">
          <font>
             <Font name="Arial Bold Italic" size="12.0" />
          </font>
@@ -88,7 +88,7 @@
             <Font name="System Bold Italic" size="12.0" />
          </font>
       </Text>
-      <ComboBox fx:id="kat" editable="true" layoutX="611.0" layoutY="68.0" prefHeight="25.0" prefWidth="125.0" promptText="Kategoria" />
+      <ComboBox fx:id="comboCategory" editable="true" layoutX="611.0" layoutY="68.0" prefHeight="25.0" prefWidth="125.0" promptText="Kategoria" />
       <ComboBox editable="true" layoutX="750.0" layoutY="68.0" prefHeight="25.0" prefWidth="133.0" promptText="Sposób płatności" />
       <ComboBox editable="true" layoutX="900.0" layoutY="68.0" prefHeight="25.0" prefWidth="106.0" promptText="Sklep" style="-fx-background-color: antiquewhite;" />
       <ComboBox editable="true" layoutX="1019.0" layoutY="68.0" prefHeight="25.0" prefWidth="95.0" promptText="Ocena" />
