@@ -7,10 +7,13 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.sql.Connection;
+
 public class Main extends Application {
 
+
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("../resources/sample.fxml"));
         Image icon = new Image("resources/images/icon.jpg");
         primaryStage.getIcons().add(icon);

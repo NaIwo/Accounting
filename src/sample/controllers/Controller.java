@@ -11,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Statement;
 
 public class Controller {
 
@@ -31,8 +30,7 @@ public class Controller {
     }
 
     @FXML
-    public void warrningWindow(String title, String header, String text)
-    {
+    public void warrningWindow(String title, String header, String text) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
         alert.setHeaderText(header);
@@ -48,15 +46,16 @@ public class Controller {
     }
 
     @FXML
-    private void goToRegistration(ActionEvent actionEvent)throws IOException {
+    private void goToRegistration(ActionEvent actionEvent) throws IOException {
         goToNextWindow(actionEvent, "/resources/registration_panel.fxml", 600, 700);
     }
+
     @FXML
     private void goToLogin(ActionEvent actionEvent) throws IOException {
 
         // BY NIE MUSIEC SIE CIAGLE REJETROWAC xDDDD
-        goToNextWindow(actionEvent, "/resources/main_panel.fxml",1200,700);
+        //goToNextWindow(actionEvent, "/resources/main_panel.fxml",1200,700);
 
-        //goToNextWindow(actionEvent, "/resources/log_panel.fxml",600,700);
+        goToNextWindow(actionEvent, "/resources/log_panel.fxml", 600, 700);
     }
 }
