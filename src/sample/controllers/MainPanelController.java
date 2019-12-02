@@ -68,8 +68,8 @@ public class MainPanelController {
 
     @FXML
     public void closeButtonAction(ActionEvent actionEvent) throws IOException, SQLException {
-        loginLogin=null;
-        loginRegistration=null;
+        loginLogin = null;
+        loginRegistration = null;
         sqlConnection.closeConnection();
         windowOperation.goToNextWindow(actionEvent, "/resources/sample.fxml", 600, 700);
     }

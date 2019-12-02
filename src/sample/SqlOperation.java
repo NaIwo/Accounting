@@ -3,7 +3,6 @@ package sample;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
-import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
