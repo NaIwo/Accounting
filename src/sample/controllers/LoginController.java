@@ -36,7 +36,7 @@ public class LoginController {
     }
 
     @FXML
-    private void loginButtonAction(ActionEvent actionEvent) throws SQLException, IOException {
+    private void loginButtonAction(ActionEvent actionEvent) throws IOException, SQLException {
         SqlConnection sqlConnection = new SqlConnection();
         if (sqlConnection.connect()) {
             if (checkFields() && readData(sqlConnection.getConnection())) {

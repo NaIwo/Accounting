@@ -32,6 +32,17 @@ public class RegistrationController {
     @FXML
     private TextField phonetwoLabel;
 
+    private static String name;
+    private static String surname;
+    private static String street;
+    private static Integer house;
+    private static Integer home;
+    private static Integer postalcode;
+    private static String city;
+    private static String email;
+    private static Integer phoneone;
+    private static Integer phonetwo;
+
     @FXML
     private void backButtonAction(ActionEvent actionEvent) throws IOException {
         LoginController window = new LoginController();
@@ -47,22 +58,22 @@ public class RegistrationController {
                 checkEmail(window_operation) &&
                 checkPostCode(window_operation) &&
                 checkPhoneNumber(window_operation)) {
-            window_operation.goToNextWindow(actionEvent, "/resources/nickname_panel.fxml",600,700);
+            assignVariables();
+            window_operation.goToNextWindow(actionEvent, "/resources/nickname_panel.fxml", 600, 700);
         }
     }
-    private boolean checkPostCode(Controller window_operation)
-    {
-        try
-        {
+
+
+    private boolean checkPostCode(Controller window_operation) {
+        try {
             Integer.parseInt(postcodeLabel.getText().replaceAll("-", "").replaceAll(" ", ""));
-        return true;
-        }
-        catch (NumberFormatException nfe)
-        {
+            return true;
+        } catch (NumberFormatException nfe) {
             window_operation.warrningWindow("Ups", "Podano niepoprawny kod pocztowy.", "Sprobuj podac ponownie.");
             return false;
         }
     }
+
 
     private boolean checkEmail(Controller window_operation) {
         if (emailLabel.getText().contains("@"))
@@ -140,6 +151,56 @@ public class RegistrationController {
         }
     }
 
+    private void assignVariables() {
+        name = nameLabel.getText();
+        surname = surnameLabel.getText();
+        street = streetLabel.getText();
+        house = Integer.parseInt(houseLabel.getText());
+        home = homeLabel.getText().replaceAll(" ", "").matches("") ? null : Integer.parseInt(homeLabel.getText());
+        postalcode = Integer.parseInt(postcodeLabel.getText().replaceAll("-", "").replaceAll(" ", ""));
+        city = cityLabel.getText();
+        email = emailLabel.getText();
+        phoneone = phoneoneLabel.getText().replaceAll(" ", "").matches("") ? null : Integer.parseInt(phoneoneLabel.getText());
+        phonetwo = phonetwoLabel.getText().replaceAll(" ", "").matches("") ? null : Integer.parseInt(phonetwoLabel.getText());
+    }
 
+    public String getName() {
+        return name;
+    }
 
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public Integer getHouse() {
+        return house;
+    }
+
+    public Integer getHome() {
+        return home;
+    }
+
+    public Integer getPostalcode() {
+        return postalcode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Integer getPhoneone() {
+        return phoneone;
+    }
+
+    public Integer getPhonetwo() {
+        return phonetwo;
+    }
 }
