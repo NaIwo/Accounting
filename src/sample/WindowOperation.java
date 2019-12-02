@@ -22,8 +22,8 @@ public class WindowOperation {
     }
 
     @FXML
-    public void warrningWindow(String title, String header, String text) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+    public void warrningWindow(String title, String header, String text, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(text);

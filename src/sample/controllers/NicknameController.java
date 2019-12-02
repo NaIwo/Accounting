@@ -2,6 +2,7 @@ package sample.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import sample.SqlConnection;
 import sample.WindowOperation;
@@ -19,7 +20,7 @@ public class NicknameController {
     private TextField passwordLabel;
     @FXML
     private TextField password2Label;
-    private static String loginRegistration;
+    public static String loginRegistration;
 
 
     @FXML
@@ -27,9 +28,9 @@ public class NicknameController {
 
         WindowOperation window_operation = new WindowOperation();
         if (loginLabel.getText().replaceAll(" ", "").matches("") || passwordLabel.getText().replaceAll(" ", "").matches("")) {
-            window_operation.warrningWindow("Ups", "Zbyt mało danych!", "Uzupełnij wszystkie pola.");
+            window_operation.warrningWindow("Ups", "Zbyt mało danych!", "Uzupełnij wszystkie pola.", Alert.AlertType.WARNING);
         } else if (!passwordLabel.getText().equals(password2Label.getText())) {
-            window_operation.warrningWindow("Ups", "Hasła nie są zgodne!", "Spróbuj ponownie.");
+            window_operation.warrningWindow("Ups", "Hasła nie są zgodne!", "Spróbuj ponownie.", Alert.AlertType.WARNING);
         } else {
             try {
                 addUserToDatabase();

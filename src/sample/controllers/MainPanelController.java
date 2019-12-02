@@ -2,44 +2,77 @@ package sample.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import sample.SqlConnection;
+import sample.SqlOperation;
+import sample.WindowOperation;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import static sample.controllers.NicknameController.loginRegistration;
+import static sample.controllers.LoginController.loginLogin;
+
 public class MainPanelController {
 
     @FXML
+    private TextField category;
+    @FXML
     private TextField store;
     private Integer id;
+    private SqlConnection sqlConnection;
+    private WindowOperation windowOperation;
+    private SqlOperation sqlOperation;
 
-    public MainPanelController() {
-
+    public MainPanelController() throws SQLException {
+        System.out.println(loginRegistration);
+        System.out.println(loginLogin);
+        windowOperation = new WindowOperation();
+        sqlOperation = new SqlOperation();
+        String login = loginRegistration != null ? loginRegistration : loginLogin;
+        sqlConnection = new SqlConnection();
+        Statement stmt = sqlConnection.getConnection().createStatement();
+        ResultSet rs = stmt.executeQuery("Select id_klienta from klienci where login='" + login + "'");
+        rs.next();
+        id = rs.getInt(1);
+        rs.close();
+        stmt.close();
     }
 
 
     @FXML
     private void addStore(ActionEvent actionEvent) throws SQLException {
         if (!store.getText().replaceAll(" ", "").equals("")) {
-            if (!checkIfStoreExists())
-                addStoreToDatabase();
+            if (!sqlOperation.checkIfStoreExists(sqlConnection.getConnection(), store))
+                sqlOperation.addStoreToDatabase(sqlConnection.getConnection(), store, id, windowOperation);
+            else {
+                windowOperation.warrningWindow("Błąd", "Podany sklep już istnieje", "Podaj ponownie nazwę sklepu", Alert.AlertType.ERROR);
+                store.clear();
+            }
         }
     }
 
-    private boolean checkIfStoreExists() throws SQLException {
-        boolean result;
-        SqlConnection sqlConnection = new SqlConnection();
-        Statement stmt = sqlConnection.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("select * from sklepy where nazwa_sklepu='" + store.getText() + "'");
-        result = rs.next();
-        rs.close();
-        stmt.close();
-        return result;
+
+    @FXML
+    private void addCategory(ActionEvent actionEvent) throws SQLException {
+        if (!category.getText().replaceAll(" ", "").equals("")) {
+            if (!sqlOperation.checkIfCategoryExists(sqlConnection.getConnection(), category)) {
+                sqlOperation.addCategoryToDatabase(sqlConnection.getConnection(), category, id, windowOperation);
+            } else {
+                windowOperation.warrningWindow("Błąd", "Podana kategoria już istnieje", "Podaj ponownie nazwę kategorii", Alert.AlertType.ERROR);
+                category.clear();
+            }
+        }
     }
 
-    private void addStoreToDatabase() {
-        System.out.println("Siema");
+    @FXML
+    public void closeButtonAction(ActionEvent actionEvent) throws IOException, SQLException {
+        loginLogin=null;
+        loginRegistration=null;
+        sqlConnection.closeConnection();
+        windowOperation.goToNextWindow(actionEvent, "/resources/sample.fxml", 600, 700);
     }
 }

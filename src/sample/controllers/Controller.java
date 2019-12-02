@@ -38,9 +38,6 @@ public class Controller {
 
     @FXML
     private void goToLogin(ActionEvent actionEvent) throws IOException {
-
-        // BY NIE MUSIEC SIE CIAGLE REJETROWAC xDDDD
-        //goToNextWindow(actionEvent, "/resources/main_panel.fxml",1200,700);
         newWindow.goToNextWindow(actionEvent, "/resources/log_panel.fxml", 600, 700);
     }
 }

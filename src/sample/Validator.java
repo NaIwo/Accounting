@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import sample.controllers.Controller;
 
@@ -50,12 +51,12 @@ public class Validator {
                 return true;
             else
             {
-                window_operation.warrningWindow("Ups", "Podano niepoprawny kod pocztowy.", "Sprobuj podac ponownie.");
+                window_operation.warrningWindow("Ups", "Podano niepoprawny kod pocztowy.", "Sprobuj podac ponownie.", Alert.AlertType.WARNING);
                 return false;
             }
 
         } catch (NumberFormatException nfe) {
-            window_operation.warrningWindow("Ups", "Podano niepoprawny kod pocztowy.", "Sprobuj podac ponownie.");
+            window_operation.warrningWindow("Ups", "Podano niepoprawny kod pocztowy.", "Sprobuj podac ponownie.", Alert.AlertType.WARNING);
             return false;
         }
     }
@@ -65,7 +66,7 @@ public class Validator {
         if (emailLabel.getText().matches("^.+@{1}.{1,9}\\.{1}.+$"))
             return true;
         else {
-            window_operation.warrningWindow("Ups", "Podano niepoprawny adres email.", "Sprawdz poprawnosc i sprobuj podac ponownie.");
+            window_operation.warrningWindow("Ups", "Podano niepoprawny adres email.", "Sprawdz poprawnosc i sprobuj podac ponownie.", Alert.AlertType.WARNING);
             return false;
         }
     }
@@ -79,7 +80,7 @@ public class Validator {
                 return true;
 
             } catch (NumberFormatException nfe) {
-                window_operation.warrningWindow("Ups", "Podano niepoprawny numer domu lub mieszkania.", "Sprawdz poprawnosc i sprobuj podac ponownie.");
+                window_operation.warrningWindow("Ups", "Podano niepoprawny numer domu lub mieszkania.", "Sprawdz poprawnosc i sprobuj podac ponownie.", Alert.AlertType.WARNING);
                 return false;
             }
         } else {
@@ -88,7 +89,7 @@ public class Validator {
 
                 return true;
             } catch (NumberFormatException nfe) {
-                window_operation.warrningWindow("Ups", "Podano niepoprawny numer domu.", "Sprobuj podac ponownie.");
+                window_operation.warrningWindow("Ups", "Podano niepoprawny numer domu.", "Sprobuj podac ponownie.", Alert.AlertType.WARNING);
                 return false;
             }
         }
@@ -101,7 +102,7 @@ public class Validator {
                 !streetLabel.getText().replaceAll("[0-9]", "").equals(streetLabel.getText()) ||
                 !cityLabel.getText().replaceAll("[0-9]", "").equals(cityLabel.getText())) {
 
-            window_operation.warrningWindow("Ups", "Podano błędne wartości pól tekstowych", "Spróbuj podać ponownie.");
+            window_operation.warrningWindow("Ups", "Podano błędne wartości pól tekstowych", "Spróbuj podać ponownie.", Alert.AlertType.WARNING);
             return false;
         } else
             return true;
@@ -116,7 +117,7 @@ public class Validator {
                 cityLabel.getText().replaceAll(" ", "").matches("") ||
                 emailLabel.getText().replaceAll(" ", "").matches("")) {
 
-            window_operation.warrningWindow("Ups", "Nie wypelniono koniecznych pol.", "Sprawdź poprawność danych i uzupełnij ponownie.");
+            window_operation.warrningWindow("Ups", "Nie wypelniono koniecznych pol.", "Sprawdź poprawność danych i uzupełnij ponownie.", Alert.AlertType.WARNING);
             return false;
         } else
             return true;
@@ -130,7 +131,7 @@ public class Validator {
             return true;
 
         } catch (NumberFormatException nfe) {
-            window_operation.warrningWindow("Ups", "Podano błędny numer telefonu!", "Spróbuj podać poprawny numer telefonu.");
+            window_operation.warrningWindow("Ups", "Podano błędny numer telefonu!", "Spróbuj podać poprawny numer telefonu.", Alert.AlertType.WARNING);
             return false;
         }
     }
@@ -141,7 +142,7 @@ public class Validator {
             Integer.parseInt(phoneoneLabel.getText());
             if(phoneoneLabel.getText().length() != 9)
             {
-                window_operation.warrningWindow("Ups", "Podano błędny numer telefonu!", "Spróbuj podać poprawny numer telefonu.");
+                window_operation.warrningWindow("Ups", "Podano błędny numer telefonu!", "Spróbuj podać poprawny numer telefonu.", Alert.AlertType.WARNING);
                 return true;
             }
         }

@@ -2,6 +2,7 @@ package sample.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -22,7 +23,7 @@ public class LoginController {
     private PasswordField passwordLabel;
     @FXML
     private Button closeButton;
-    private static String loginLogin;
+    public static String loginLogin;
 
 
     @FXML
@@ -43,9 +44,10 @@ public class LoginController {
         if (sqlConnection.connect()) {
             WindowOperation window = new WindowOperation();
             if (checkFields() && readData(sqlConnection.getConnection())) {
+                loginLogin = loginLabel.getText();
                 window.goToNextWindow(actionEvent, "/resources/main_panel.fxml", 1200, 700);
             } else {
-                window.warrningWindow("Niepoprawne dane", "Podano niepoprawne dane logowania", "Sprawdz poprawnosc wprowadzonych danych");
+                window.warrningWindow("Niepoprawne dane", "Podano niepoprawne dane logowania", "Sprawdz poprawnosc wprowadzonych danych", Alert.AlertType.WARNING);
             }
 
         } else
