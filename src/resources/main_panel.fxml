@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Separator?>
@@ -11,17 +12,17 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: burlywood; -fx-border-color: black; -fx-border-width: 12;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.MainPanelController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: burlywood; -fx-border-color: black; -fx-border-width: 12;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.MainPanelController">
    <children>
       <Separator layoutX="589.0" layoutY="13.0" orientation="VERTICAL" prefHeight="675.0" prefWidth="12.0" />
       <TableView layoutX="595.0" layoutY="116.0" prefHeight="572.0" prefWidth="593.0" style="-fx-background-color: lightslategrey;">
-        <columns>
-          <TableColumn prefWidth="75.0" text="C1" />
-          <TableColumn prefWidth="75.0" text="C2" />
+         <columns>
+            <TableColumn prefWidth="75.0" text="C1" />
+            <TableColumn prefWidth="75.0" text="C2" />
             <TableColumn prefWidth="75.0" text="C3" />
             <TableColumn prefWidth="75.0" text="C4" />
             <TableColumn prefWidth="75.0" text="C5" />
-        </columns>
+         </columns>
       </TableView>
       <TextField layoutX="36.0" layoutY="165.0" prefHeight="34.0" prefWidth="169.0" promptText="Wprowadź kwotę" style="-fx-background-color: antiquewhite;" />
       <Text layoutX="246.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Moje Rachunki">
@@ -35,7 +36,7 @@
       <ComboBox editable="true" layoutX="246.0" layoutY="198.0" prefWidth="150.0" promptText="Sklep" style="-fx-background-color: antiquewhite;" />
       <ComboBox editable="true" layoutX="418.0" layoutY="198.0" prefWidth="150.0" promptText="Sposób płatności" />
       <TextField layoutX="36.0" layoutY="266.0" prefHeight="62.0" prefWidth="361.0" promptText="Wprowadź komentarz do podanej transakcji (Opcjonalne)" style="-fx-background-color: antiquewhite;" />
-      <Button layoutX="36.0" layoutY="648.0" mnemonicParsing="false" onAction="#closeButtonAction" prefHeight="28.0" prefWidth="106.0" style="-fx-background-color: midnightblue;" text="Zakończ pracę" textFill="#00d9ff">
+      <Button layoutX="36.0" layoutY="648.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="106.0" style="-fx-background-color: midnightblue;" text="Zakończ pracę" textFill="#00d9ff">
          <font>
             <Font name="System Bold Italic" size="12.0" />
          </font>
@@ -47,12 +48,12 @@
       </Button>
       <ComboBox layoutX="431.0" layoutY="280.0" prefHeight="34.0" prefWidth="125.0" promptText="Ocena" style="-fx-background-color: gold;" />
       <Separator layoutX="17.0" layoutY="442.0" prefHeight="16.0" prefWidth="571.0" />
-      <Button layoutX="50.0" layoutY="577.0" mnemonicParsing="false" onAction="#addStore" prefHeight="25.0" prefWidth="106.0" style="-fx-background-color: lightcoral;" text="Dodaj sklep">
+      <Button layoutX="50.0" layoutY="527.0" mnemonicParsing="false" onAction="#addStore" prefHeight="28.0" prefWidth="106.0" style="-fx-background-color: lightcoral;" text="Dodaj sklep">
          <font>
             <Font name="Arial Bold Italic" size="12.0" />
          </font>
       </Button>
-      <Button layoutX="224.0" layoutY="575.0" mnemonicParsing="false" onAction="#addCategory" prefHeight="28.0" prefWidth="125.0" style="-fx-background-color: lightcoral;" text="Dodaj kategorię">
+      <Button layoutX="224.0" layoutY="526.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="125.0" style="-fx-background-color: lightcoral;" text="Dodaj kategorię">
          <font>
             <Font name="Arial Bold Italic" size="12.0" />
          </font>
@@ -62,8 +63,34 @@
             <Font name="Arial Bold Italic" size="11.0" />
          </font>
       </Button>
-      <TextField fx:id="store" layoutX="29.0" layoutY="511.0" promptText="Sklep" style="-fx-background-color: antiquewhite;" />
-      <TextField fx:id="category" layoutX="217.0" layoutY="511.0" promptText="Kategoria" style="-fx-background-color: antiquewhite;" />
+      <TextField fx:id="store" layoutX="29.0" layoutY="474.0" promptText="Sklep" style="-fx-background-color: antiquewhite;" />
+      <TextField layoutX="212.0" layoutY="474.0" promptText="Kategoria" style="-fx-background-color: antiquewhite;" />
       <Separator layoutX="15.0" layoutY="623.0" prefHeight="9.0" prefWidth="571.0" />
+      <Button layoutX="50.0" layoutY="574.0" mnemonicParsing="false" onAction="#addStore" prefHeight="28.0" prefWidth="106.0" style="-fx-background-color: lightcoral;" text="Usuń sklep">
+         <font>
+            <Font name="Arial Bold Italic" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="224.0" layoutY="575.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="125.0" style="-fx-background-color: lightcoral;" text="Usuń kategorię">
+         <font>
+            <Font name="Arial Bold Italic" size="12.0" />
+         </font>
+      </Button>
+      <CheckBox layoutX="611.0" layoutY="24.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Cała dostępna historia" textFill="#9d1818">
+         <font>
+            <Font name="System Bold Italic" size="12.0" />
+         </font>
+      </CheckBox>
+      <DatePicker layoutX="835.0" layoutY="24.0" prefHeight="25.0" prefWidth="95.0" promptText="Od" />
+      <DatePicker layoutX="962.0" layoutY="24.0" prefHeight="25.0" prefWidth="87.0" promptText="Do" />
+      <Text fill="#1911ae" layoutX="775.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lub" wrappingWidth="25.1343994140625">
+         <font>
+            <Font name="System Bold Italic" size="12.0" />
+         </font>
+      </Text>
+      <ComboBox fx:id="kat" editable="true" layoutX="611.0" layoutY="68.0" prefHeight="25.0" prefWidth="125.0" promptText="Kategoria" />
+      <ComboBox editable="true" layoutX="750.0" layoutY="68.0" prefHeight="25.0" prefWidth="133.0" promptText="Sposób płatności" />
+      <ComboBox editable="true" layoutX="900.0" layoutY="68.0" prefHeight="25.0" prefWidth="106.0" promptText="Sklep" style="-fx-background-color: antiquewhite;" />
+      <ComboBox editable="true" layoutX="1019.0" layoutY="68.0" prefHeight="25.0" prefWidth="95.0" promptText="Ocena" />
    </children>
 </Pane>
