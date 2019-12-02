@@ -6,6 +6,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import sample.Validator;
+import sample.WindowOperation;
 
 import java.io.IOException;
 
@@ -51,120 +53,14 @@ public class RegistrationController {
 
     @FXML
     private void registrationButtonAction(ActionEvent actionEvent) throws IOException {
-        Controller window_operation = new Controller();
-        if (checkFieldFulfillment(window_operation) &&
-                checkCorrectStringArguments(window_operation) &&
-                checkHouseLabel(window_operation) &&
-                checkEmail(window_operation) &&
-                checkPostCode(window_operation) &&
-                checkPhoneNumber(window_operation)) {
+        WindowOperation window_operation = new WindowOperation();
+        TextField[] allTextFields = new TextField[]{nameLabel, surnameLabel, streetLabel, houseLabel, homeLabel, postcodeLabel,
+                cityLabel, emailLabel, phoneoneLabel, phonetwoLabel};
+        Validator validate = new Validator(allTextFields);
+        if (validate.checkAllValidation(window_operation)) {
             assignVariables();
             window_operation.goToNextWindow(actionEvent, "/resources/nickname_panel.fxml", 600, 700);
         }
-    }
-
-
-    private boolean checkPostCode(Controller window_operation) {
-        try {
-            String text_value = postcodeLabel.getText().replaceAll("-", "").replaceAll(" ", "");
-            Integer.parseInt(text_value);
-            if (text_value.length() == 5)
-                return true;
-            else {
-                window_operation.warrningWindow("Ups", "Podano niepoprawny kod pocztowy.", "Sprobuj podac ponownie.");
-                return false;
-            }
-
-        } catch (NumberFormatException nfe) {
-            window_operation.warrningWindow("Ups", "Podano niepoprawny kod pocztowy.", "Sprobuj podac ponownie.");
-            return false;
-        }
-    }
-
-
-    private boolean checkEmail(Controller window_operation) {
-        if (emailLabel.getText().matches("^.+@{1}.{1,9}\\.{1}.+$"))
-            return true;
-        else {
-            window_operation.warrningWindow("Ups", "Podano niepoprawny adres email.", "Sprawdz poprawnosc i sprobuj podac ponownie.");
-            return false;
-        }
-    }
-
-    private boolean checkHouseLabel(Controller window_operation) {
-        if (!homeLabel.getText().replaceAll(" ", "").equals("")) {
-            try {
-                Integer.parseInt(homeLabel.getText().replaceAll(" ", ""));
-                Integer.parseInt(houseLabel.getText().replaceAll(" ", ""));
-
-                return true;
-
-            } catch (NumberFormatException nfe) {
-                window_operation.warrningWindow("Ups", "Podano niepoprawny numer domu lub mieszkania.", "Sprawdz poprawnosc i sprobuj podac ponownie.");
-                return false;
-            }
-        } else {
-            try {
-                Integer.parseInt(houseLabel.getText().replaceAll(" ", ""));
-
-                return true;
-            } catch (NumberFormatException nfe) {
-                window_operation.warrningWindow("Ups", "Podano niepoprawny numer domu.", "Sprobuj podac ponownie.");
-                return false;
-            }
-        }
-
-    }
-
-    private boolean checkCorrectStringArguments(Controller window_operation) {
-        if (!nameLabel.getText().replaceAll("[0-9]", "").equals(nameLabel.getText()) ||
-                !surnameLabel.getText().replaceAll("[0-9]", "").equals(surnameLabel.getText()) ||
-                !streetLabel.getText().replaceAll("[0-9]", "").equals(streetLabel.getText()) ||
-                !cityLabel.getText().replaceAll("[0-9]", "").equals(cityLabel.getText())) {
-
-            window_operation.warrningWindow("Ups", "Podano błędne wartości pól tekstowych", "Spróbuj podać ponownie.");
-            return false;
-        } else
-            return true;
-    }
-
-    private boolean checkFieldFulfillment(Controller window_operation) {
-        if (nameLabel.getText().replaceAll(" ", "").matches("") ||
-                surnameLabel.getText().replaceAll(" ", "").matches("") ||
-                streetLabel.getText().replaceAll(" ", "").matches("") ||
-                houseLabel.getText().replaceAll(" ", "").matches("") ||
-                postcodeLabel.getText().replaceAll(" ", "").matches("") ||
-                cityLabel.getText().replaceAll(" ", "").matches("") ||
-                emailLabel.getText().replaceAll(" ", "").matches("")) {
-
-            window_operation.warrningWindow("Ups", "Nie wypelniono koniecznych pol.", "Sprawdź poprawność danych i uzupełnij ponownie.");
-            return false;
-        } else
-            return true;
-    }
-
-    private boolean checkPhoneNumber(Controller window_operation) {
-        try {
-            if (validatePhoneNumber(window_operation, phoneoneLabel)) return false;
-            if (validatePhoneNumber(window_operation, phonetwoLabel)) return false;
-
-            return true;
-
-        } catch (NumberFormatException nfe) {
-            window_operation.warrningWindow("Ups", "Podano błędny numer telefonu!", "Spróbuj podać poprawny numer telefonu.");
-            return false;
-        }
-    }
-
-    private boolean validatePhoneNumber(Controller window_operation, TextField phoneoneLabel) {
-        if (!phoneoneLabel.getText().replaceAll(" ", "").matches("")) {
-            Integer.parseInt(phoneoneLabel.getText());
-            if (phoneoneLabel.getText().length() != 9) {
-                window_operation.warrningWindow("Ups", "Podano błędny numer telefonu!", "Spróbuj podać poprawny numer telefonu.");
-                return true;
-            }
-        }
-        return false;
     }
 
     private void assignVariables() {

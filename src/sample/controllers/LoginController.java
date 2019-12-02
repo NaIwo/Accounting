@@ -7,6 +7,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import sample.SqlConnection;
+import sample.WindowOperation;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -32,7 +33,7 @@ public class LoginController {
 
     @FXML
     public void backButtonAction(ActionEvent actionEvent) throws IOException {
-        Controller window = new Controller();
+        WindowOperation window = new WindowOperation();
         window.goToNextWindow(actionEvent, "/resources/sample.fxml", 600, 700);
     }
 
@@ -40,13 +41,11 @@ public class LoginController {
     private void loginButtonAction(ActionEvent actionEvent) throws IOException, SQLException {
         SqlConnection sqlConnection = new SqlConnection();
         if (sqlConnection.connect()) {
+            WindowOperation window = new WindowOperation();
             if (checkFields() && readData(sqlConnection.getConnection())) {
-                Controller window = new Controller();
-                loginLogin = loginLabel.getText();
                 window.goToNextWindow(actionEvent, "/resources/main_panel.fxml", 1200, 700);
             } else {
-                Controller widow = new Controller();
-                widow.warrningWindow("Niepoprawne dane", "Podano niepoprawne dane logowania", "Sprawdz poprawnosc wprowadzonych danych");
+                window.warrningWindow("Niepoprawne dane", "Podano niepoprawne dane logowania", "Sprawdz poprawnosc wprowadzonych danych");
             }
 
         } else

@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import sample.SqlConnection;
+import sample.WindowOperation;
 
 import java.io.IOException;
 import java.sql.CallableStatement;
@@ -24,7 +25,7 @@ public class NicknameController {
     @FXML
     private void okButtonAction(ActionEvent actionEvent) {
 
-        Controller window_operation = new Controller();
+        WindowOperation window_operation = new WindowOperation();
         if (loginLabel.getText().replaceAll(" ", "").matches("") || passwordLabel.getText().replaceAll(" ", "").matches("")) {
             window_operation.warrningWindow("Ups", "Zbyt mało danych!", "Uzupełnij wszystkie pola.");
         } else if (!passwordLabel.getText().equals(password2Label.getText())) {
@@ -68,7 +69,7 @@ public class NicknameController {
 
     @FXML
     public void backButtonAction(ActionEvent actionEvent) throws IOException {
-        Controller window = new Controller();
+        WindowOperation window = new WindowOperation();
         window.goToNextWindow(actionEvent, "/resources/registration_panel.fxml", 600, 700);
     }
 }
