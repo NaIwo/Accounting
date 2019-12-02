@@ -68,10 +68,9 @@ public class RegistrationController {
         try {
             String text_value = postcodeLabel.getText().replaceAll("-", "").replaceAll(" ", "");
             Integer.parseInt(text_value);
-            if(text_value.length() == 5)
+            if (text_value.length() == 5)
                 return true;
-            else
-            {
+            else {
                 window_operation.warrningWindow("Ups", "Podano niepoprawny kod pocztowy.", "Sprobuj podac ponownie.");
                 return false;
             }
@@ -158,11 +157,9 @@ public class RegistrationController {
     }
 
     private boolean validatePhoneNumber(Controller window_operation, TextField phoneoneLabel) {
-        if (!phoneoneLabel.getText().replaceAll(" ", "").matches(""))
-        {
+        if (!phoneoneLabel.getText().replaceAll(" ", "").matches("")) {
             Integer.parseInt(phoneoneLabel.getText());
-            if(phoneoneLabel.getText().length() != 9)
-            {
+            if (phoneoneLabel.getText().length() != 9) {
                 window_operation.warrningWindow("Ups", "Podano błędny numer telefonu!", "Spróbuj podać poprawny numer telefonu.");
                 return true;
             }

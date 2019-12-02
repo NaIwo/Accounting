@@ -21,6 +21,7 @@ public class LoginController {
     private PasswordField passwordLabel;
     @FXML
     private Button closeButton;
+    private static String loginLogin;
 
 
     @FXML
@@ -41,6 +42,7 @@ public class LoginController {
         if (sqlConnection.connect()) {
             if (checkFields() && readData(sqlConnection.getConnection())) {
                 Controller window = new Controller();
+                loginLogin = loginLabel.getText();
                 window.goToNextWindow(actionEvent, "/resources/main_panel.fxml", 1200, 700);
             } else {
                 Controller widow = new Controller();
