@@ -66,8 +66,16 @@ public class RegistrationController {
 
     private boolean checkPostCode(Controller window_operation) {
         try {
-            Integer.parseInt(postcodeLabel.getText().replaceAll("-", "").replaceAll(" ", ""));
-            return true;
+            String text_value = postcodeLabel.getText().replaceAll("-", "").replaceAll(" ", "");
+            Integer.parseInt(text_value);
+            if(text_value.length() == 5)
+                return true;
+            else
+            {
+                window_operation.warrningWindow("Ups", "Podano niepoprawny kod pocztowy.", "Sprobuj podac ponownie.");
+                return false;
+            }
+
         } catch (NumberFormatException nfe) {
             window_operation.warrningWindow("Ups", "Podano niepoprawny kod pocztowy.", "Sprobuj podac ponownie.");
             return false;
@@ -76,7 +84,7 @@ public class RegistrationController {
 
 
     private boolean checkEmail(Controller window_operation) {
-        if (emailLabel.getText().contains("@"))
+        if (emailLabel.getText().matches("^.+@{1}.{1,9}\\.{1}.+$"))
             return true;
         else {
             window_operation.warrningWindow("Ups", "Podano niepoprawny adres email.", "Sprawdz poprawnosc i sprobuj podac ponownie.");
@@ -138,10 +146,8 @@ public class RegistrationController {
 
     private boolean checkPhoneNumber(Controller window_operation) {
         try {
-            if (!phoneoneLabel.getText().replaceAll(" ", "").matches(""))
-                Integer.parseInt(phoneoneLabel.getText());
-            if (!phonetwoLabel.getText().replaceAll(" ", "").matches(""))
-                Integer.parseInt(phonetwoLabel.getText());
+            if (validatePhoneNumber(window_operation, phoneoneLabel)) return false;
+            if (validatePhoneNumber(window_operation, phonetwoLabel)) return false;
 
             return true;
 
@@ -149,6 +155,19 @@ public class RegistrationController {
             window_operation.warrningWindow("Ups", "Podano błędny numer telefonu!", "Spróbuj podać poprawny numer telefonu.");
             return false;
         }
+    }
+
+    private boolean validatePhoneNumber(Controller window_operation, TextField phoneoneLabel) {
+        if (!phoneoneLabel.getText().replaceAll(" ", "").matches(""))
+        {
+            Integer.parseInt(phoneoneLabel.getText());
+            if(phoneoneLabel.getText().length() != 9)
+            {
+                window_operation.warrningWindow("Ups", "Podano błędny numer telefonu!", "Spróbuj podać poprawny numer telefonu.");
+                return true;
+            }
+        }
+        return false;
     }
 
     private void assignVariables() {
