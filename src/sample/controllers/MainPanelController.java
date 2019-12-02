@@ -28,8 +28,6 @@ public class MainPanelController {
     private SqlOperation sqlOperation;
 
     public MainPanelController() throws SQLException {
-        System.out.println(loginRegistration);
-        System.out.println(loginLogin);
         windowOperation = new WindowOperation();
         sqlOperation = new SqlOperation();
         String login = loginRegistration != null ? loginRegistration : loginLogin;
