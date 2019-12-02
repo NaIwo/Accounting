@@ -63,7 +63,6 @@ public class RegistrationController {
         }
     }
 
-
     private void assignVariables() {
         name = nameLabel.getText();
         surname = surnameLabel.getText();

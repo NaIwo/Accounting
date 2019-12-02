@@ -19,6 +19,7 @@ public class NicknameController {
     private TextField passwordLabel;
     @FXML
     private TextField password2Label;
+    private static String loginRegistration;
 
 
     @FXML
@@ -40,6 +41,7 @@ public class NicknameController {
     }
 
     private void addUserToDatabase() throws SQLException {
+        loginRegistration = loginLabel.getText();
         RegistrationController registrationController = new RegistrationController();
         SqlConnection sqlConnection = new SqlConnection();
         sqlConnection.connect();

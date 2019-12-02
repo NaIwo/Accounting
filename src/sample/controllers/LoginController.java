@@ -22,6 +22,7 @@ public class LoginController {
     private PasswordField passwordLabel;
     @FXML
     private Button closeButton;
+    private static String loginLogin;
 
 
     @FXML
