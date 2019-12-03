@@ -37,6 +37,9 @@ public class MainPanelController {
     private TextField category;
     @FXML
     private TextField store;
+    @FXML
+    private TextField comment;
+
     private Integer id;
     private SqlConnection sqlConnection;
     private WindowOperation windowOperation;
@@ -165,9 +168,14 @@ public class MainPanelController {
     }
 
     @FXML
-    public void confirmButton(ActionEvent actionEvent) {
+    public void confirmButton(ActionEvent actionEvent) throws SQLException {
         TransactionValidator transactionValidator = new TransactionValidator();
         if (transactionValidator.checkValidate(money.getText().replaceAll(",", "."), comboStore, comboCategory, comboRate, comboPayment, dateDate))
-            System.out.println("Siema");
+        {
+            sqlOperation.addTransaction(sqlConnection.getConnection(), windowOperation, id,  money.getText(),
+                    comboStore.getSelectionModel().toString().toUpperCase(),  comboCategory.getSelectionModel().toString().toUpperCase(),
+                    dateDate.getValue().toString(),   comboPayment.getSelectionModel().toString().toUpperCase(),
+                    comboRate.getSelectionModel().toString(),  comment.getText().toUpperCase());
+        }
     }
 }

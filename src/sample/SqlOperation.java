@@ -3,10 +3,7 @@ package sample;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class SqlOperation {
 
@@ -77,5 +74,24 @@ public class SqlOperation {
         stmt.executeUpdate("delete from kategorie where nazwa_kategorii='" + category.getText().toUpperCase() + "'");
         stmt.close();
         windowOperation.warrningWindow("Usunięto kategorię", "Operacja przebiegła pomyślnie", "Kategoria został usunięta z bazy danych", Alert.AlertType.INFORMATION);
+    }
+
+    public void addTransaction(Connection connection, WindowOperation windowOperation, int id, String kwota, String sklep, String kategoria, String data,  String sposob, String ocena, String komentarz) throws SQLException {
+
+        CallableStatement stmt = connection.prepareCall("{call NowaTransakcja(?, ?, ?, ?, ?, ?, ?, ?)}");
+
+        stmt.setInt(1, id);
+        stmt.setString(2, kwota.replaceAll("\\.", ","));
+        stmt.setString(3, sklep);
+        stmt.setString(4, kategoria);
+        stmt.setString(5, data.substring(2, data.length()).replaceAll("-", "/"));
+        stmt.setString(6, sposob);
+        stmt.setString(7, ocena);
+        stmt.setString(8, komentarz);
+
+
+        stmt.execute();
+        stmt.close();
+        windowOperation.warrningWindow("Dodano transakcję", "Operacja przebiegła pomyślnie", "Transakcja została dodana do bazy danych", Alert.AlertType.INFORMATION);
     }
 }
