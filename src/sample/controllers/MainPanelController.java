@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import sample.SqlConnection;
 import sample.SqlOperation;
@@ -24,6 +25,8 @@ public class MainPanelController {
     public ComboBox comboPayment;
     @FXML
     public TextField money;
+    @FXML
+    public DatePicker dateDate;
     @FXML
     private ComboBox comboRate;
     @FXML
@@ -164,7 +167,7 @@ public class MainPanelController {
     @FXML
     public void confirmButton(ActionEvent actionEvent) {
         TransactionValidator transactionValidator = new TransactionValidator();
-        if (transactionValidator.checkValidate(money.getText()))
+        if (transactionValidator.checkValidate(money.getText().replaceAll(",", "."), comboStore, comboCategory, comboRate, comboPayment, dateDate))
             System.out.println("Siema");
     }
 }

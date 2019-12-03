@@ -31,7 +31,7 @@
          </font>
       </Text>
       <Text fill="#645e5e" layoutX="205.0" layoutY="667.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wprowadź dane z zakupów lub sprawdź swoją historię" />
-      <DatePicker layoutX="418.0" layoutY="137.0" prefHeight="28.0" prefWidth="150.0" promptText="Data" style="-fx-background-color: antiquewhite;" />
+      <DatePicker fx:id="dateDate" layoutX="418.0" layoutY="137.0" prefHeight="28.0" prefWidth="150.0" promptText="Data" style="-fx-background-color: antiquewhite;" />
       <ComboBox fx:id="comboCategory" editable="true" layoutX="246.0" layoutY="138.0" prefWidth="150.0" promptText="Kategoria" style="-fx-background-color: antiquewhite;" />
       <ComboBox fx:id="comboStore" editable="true" layoutX="246.0" layoutY="198.0" prefWidth="150.0" promptText="Sklep" style="-fx-background-color: antiquewhite;" />
       <ComboBox fx:id="comboPayment" editable="true" layoutX="418.0" layoutY="198.0" prefWidth="150.0" promptText="Sposób płatności" />
