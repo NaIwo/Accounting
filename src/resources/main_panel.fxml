@@ -24,7 +24,7 @@
             <TableColumn prefWidth="75.0" text="C5" />
          </columns>
       </TableView>
-      <TextField layoutX="36.0" layoutY="165.0" prefHeight="34.0" prefWidth="169.0" promptText="Wprowadź kwotę" style="-fx-background-color: antiquewhite;" />
+      <TextField fx:id="money" layoutX="36.0" layoutY="165.0" prefHeight="34.0" prefWidth="169.0" promptText="Wprowadź kwotę" style="-fx-background-color: antiquewhite;" />
       <Text layoutX="246.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Moje Rachunki">
          <font>
             <Font name="System Bold Italic" size="30.0" />
@@ -32,21 +32,21 @@
       </Text>
       <Text fill="#645e5e" layoutX="205.0" layoutY="667.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wprowadź dane z zakupów lub sprawdź swoją historię" />
       <DatePicker layoutX="418.0" layoutY="137.0" prefHeight="28.0" prefWidth="150.0" promptText="Data" style="-fx-background-color: antiquewhite;" />
-      <ComboBox editable="true" layoutX="246.0" layoutY="138.0" prefWidth="150.0" promptText="Kategoria" style="-fx-background-color: antiquewhite;" />
-      <ComboBox editable="true" layoutX="246.0" layoutY="198.0" prefWidth="150.0" promptText="Sklep" style="-fx-background-color: antiquewhite;" />
-      <ComboBox editable="true" layoutX="418.0" layoutY="198.0" prefWidth="150.0" promptText="Sposób płatności" />
+      <ComboBox fx:id="comboCategory" editable="true" layoutX="246.0" layoutY="138.0" prefWidth="150.0" promptText="Kategoria" style="-fx-background-color: antiquewhite;" />
+      <ComboBox fx:id="comboStore" editable="true" layoutX="246.0" layoutY="198.0" prefWidth="150.0" promptText="Sklep" style="-fx-background-color: antiquewhite;" />
+      <ComboBox fx:id="comboPayment" editable="true" layoutX="418.0" layoutY="198.0" prefWidth="150.0" promptText="Sposób płatności" />
       <TextField layoutX="36.0" layoutY="266.0" prefHeight="62.0" prefWidth="361.0" promptText="Wprowadź komentarz do podanej transakcji (Opcjonalne)" style="-fx-background-color: antiquewhite;" />
       <Button layoutX="36.0" layoutY="648.0" mnemonicParsing="false" onAction="#closeButtonAction" prefHeight="28.0" prefWidth="106.0" style="-fx-background-color: midnightblue;" text="Zakończ pracę" textFill="#00d9ff">
          <font>
             <Font name="System Bold Italic" size="12.0" />
          </font>
       </Button>
-      <Button layoutX="246.0" layoutY="382.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: dimgray;" text="ZATWIERDŹ!" textFill="RED">
+      <Button layoutX="246.0" layoutY="382.0" mnemonicParsing="false" onAction="#confirmButton" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: dimgray;" text="ZATWIERDŹ!" textFill="RED">
          <font>
             <Font name="System Bold Italic" size="15.0" />
          </font>
       </Button>
-      <ComboBox layoutX="431.0" layoutY="280.0" prefHeight="34.0" prefWidth="125.0" promptText="Ocena" style="-fx-background-color: gold;" />
+      <ComboBox fx:id="comboRate" layoutX="431.0" layoutY="280.0" prefHeight="34.0" prefWidth="125.0" promptText="Ocena" style="-fx-background-color: gold;" />
       <Separator layoutX="17.0" layoutY="442.0" prefHeight="16.0" prefWidth="571.0" />
       <Button layoutX="50.0" layoutY="527.0" mnemonicParsing="false" onAction="#addStore" prefHeight="28.0" prefWidth="106.0" style="-fx-background-color: lightcoral;" text="Dodaj sklep">
          <font>
@@ -88,7 +88,7 @@
             <Font name="System Bold Italic" size="12.0" />
          </font>
       </Text>
-      <ComboBox fx:id="comboCategory" editable="true" layoutX="611.0" layoutY="68.0" prefHeight="25.0" prefWidth="125.0" promptText="Kategoria" />
+      <ComboBox editable="true" layoutX="611.0" layoutY="68.0" prefHeight="25.0" prefWidth="125.0" promptText="Kategoria" />
       <ComboBox editable="true" layoutX="750.0" layoutY="68.0" prefHeight="25.0" prefWidth="133.0" promptText="Sposób płatności" />
       <ComboBox editable="true" layoutX="900.0" layoutY="68.0" prefHeight="25.0" prefWidth="106.0" promptText="Sklep" style="-fx-background-color: antiquewhite;" />
       <ComboBox editable="true" layoutX="1019.0" layoutY="68.0" prefHeight="25.0" prefWidth="95.0" promptText="Ocena" />

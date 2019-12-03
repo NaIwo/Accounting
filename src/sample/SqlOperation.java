@@ -24,7 +24,6 @@ public class SqlOperation {
         Statement stmt = connection.createStatement();
         stmt.executeUpdate("insert into sklepy values ('" + store.getText().toUpperCase() + "', 0 ,'" + id + "')");
         stmt.close();
-        store.clear();
         windowOperation.warrningWindow("Dodano sklep", "Operacja przebiegła pomyślnie", "Sklep został dodany do bazy danych", Alert.AlertType.INFORMATION);
     }
 
@@ -42,7 +41,6 @@ public class SqlOperation {
         Statement stmt = connection.createStatement();
         stmt.executeUpdate("insert into kategorie(nazwa_kategorii, id_klienta) values ('" + category.getText().toUpperCase() + "','" + id + "')");
         stmt.close();
-        category.clear();
         windowOperation.warrningWindow("Dodano kategorię", "Operacja przebiegła pomyślnie", "Kategoria został dodany do bazy danych", Alert.AlertType.INFORMATION);
     }
 
@@ -78,7 +76,6 @@ public class SqlOperation {
         Statement stmt = connection.createStatement();
         stmt.executeUpdate("delete from kategorie where nazwa_kategorii='" + category.getText().toUpperCase() + "'");
         stmt.close();
-        category.clear();
         windowOperation.warrningWindow("Usunięto kategorię", "Operacja przebiegła pomyślnie", "Kategoria został usunięta z bazy danych", Alert.AlertType.INFORMATION);
     }
 }
