@@ -23,13 +23,11 @@ public class MainPanelController {
     @FXML
     public TableColumn sixthColumn;
     @FXML
-    public ComboBox comboCategory1;
+    private ComboBox comboCategory1;
     @FXML
-    public ComboBox comboRate1;
+    private ComboBox comboRate1;
     @FXML
-    public ComboBox comboPayment1;
-    @FXML
-    public ComboBox comboStore1;
+    private ComboBox comboStore1;
     @FXML
     private TableView tableView;
     @FXML
@@ -86,10 +84,11 @@ public class MainPanelController {
         addStoresToMenu(comboStore1);
         addCategoriesToMenu(comboCategory);
         addCategoriesToMenu(comboCategory1);
+        comboRate1.getItems().add(0);
         addRateToMenu(comboRate);
         addRateToMenu(comboRate1);
         addPaymentToMenu(comboPayment);
-        addPaymentToMenu(comboPayment1);
+        checkBoxAction();
     }
 
     private void addStoresToMenu(ComboBox comboBox) throws SQLException {
@@ -115,7 +114,7 @@ public class MainPanelController {
     }
 
     private void addRateToMenu(ComboBox comboBox) {
-        comboBox.getItems().removeAll(comboBox.getItems());
+        //comboBox.getItems().removeAll(comboBox.getItems());
         for (int i = 1; i < 6; i++) {
             comboBox.getItems().add(i);
         }
@@ -229,9 +228,22 @@ public class MainPanelController {
     }
 
     @FXML
-    public void checkBoxAction() throws SQLException {
+    private void checkBoxAction() throws SQLException {
         tableView.getItems().clear();
-        rightPanel.showAllTransactions(firstColumn, secondColumn, thirdColumn, fourthColumn, fifthColumn, sixthColumn, tableView, id, checkBox.isSelected());
+        rightPanel.showAllTransactions(firstColumn, secondColumn, thirdColumn, fourthColumn, fifthColumn, sixthColumn, tableView, id, checkBox.isSelected(),
+                comboStore1, comboCategory1, comboRate1);
     }
 
+    @FXML
+    public void comboCategoryAction(ActionEvent actionEvent) throws SQLException {
+        checkBoxAction();
+    }
+    @FXML
+    public void comboStoreAction(ActionEvent actionEvent) throws SQLException {
+        checkBoxAction();
+    }
+    @FXML
+    public void comboRateAction(ActionEvent actionEvent) throws SQLException {
+        checkBoxAction();
+    }
 }

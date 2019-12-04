@@ -1,14 +1,17 @@
 package sample;
 
 
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import sample.controllers.MainPanelController;
 import sample.sqloperation.SqlConnection;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class RightPanel {
 
@@ -19,7 +22,8 @@ public class RightPanel {
     }
 
     public void showAllTransactions(TableColumn firstColumn, TableColumn secondColumn, TableColumn thirdColumn, TableColumn fourthColumn,
-                                    TableColumn fifthColumn, TableColumn sixthColumn, TableView tableView, Integer id, boolean mode) throws SQLException {
+                                    TableColumn fifthColumn, TableColumn sixthColumn, TableView tableView, Integer id, boolean mode,
+                                    ComboBox comboStore, ComboBox comboCategory, ComboBox comboRate) throws SQLException {
         firstColumn.setText("Nazwa_Sklepu");
         secondColumn.setText("Nazwa_Kategorii");
         thirdColumn.setText("Data");
@@ -32,10 +36,11 @@ public class RightPanel {
         fourthColumn.setCellValueFactory(new PropertyValueFactory<>("money"));
         fifthColumn.setCellValueFactory(new PropertyValueFactory<>("rate"));
         sixthColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
-        getDataToTable(id, tableView, mode);
+        getDataToTable(id, tableView, mode, comboStore, comboCategory, comboRate);
     }
 
-    private void getDataToTable(Integer id, TableView tableView, boolean mode) throws SQLException {
+    private void getDataToTable(Integer id, TableView tableView, boolean mode, ComboBox comboStore, ComboBox comboCategory,
+                                ComboBox comboRate) throws SQLException {
         Statement stmt = sqlConnection.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery("select nazwa_sklepu, (select nazwa_kategorii from kategorie where id_kategorii=p.id_kategorii), data, " +
                 "(select kwota from platnosci where p.id_platnosci=id_platnosci), ocena, komentarz from transakcje p where id_klienta=" + id + "order by data desc");
@@ -44,7 +49,48 @@ public class RightPanel {
         }
         rs.close();
         stmt.close();
-        if(!mode)
-            System.out.println("Wykonaj operacje");
+        if (!mode)
+            getCondensedData(tableView, comboStore, comboCategory, comboRate);
+    }
+
+    private void getCondensedData(TableView tableView, ComboBox comboStore, ComboBox comboCategory, ComboBox comboRate) {
+        String store;
+        String category;
+        int rate;
+        double ocena;
+        double suma;
+        ArrayList<Transaction> list = new ArrayList<Transaction>();
+
+
+        if (comboStore.getSelectionModel().isEmpty()) store = "";
+        else store = comboStore.getValue().toString().toUpperCase();
+        if (comboCategory.getSelectionModel().isEmpty()) category = "";
+        else category = comboCategory.getValue().toString().toUpperCase();
+        if (comboRate.getSelectionModel().isEmpty()) rate = 0;
+        else rate = Integer.parseInt(comboRate.getValue().toString());
+
+        if (!store.equals("") || !category.equals("") || rate != 0) {
+            for (int i = 0; i < tableView.getItems().size(); i++) {
+                Transaction transaction = (Transaction) tableView.getItems().get(i);
+                if ((store.equals(transaction.getStore()) || store.equals("")) && (category.equals(transaction.getCategory()) || category.equals("")) &&
+                        (rate == transaction.getRate() || rate == 0))
+                    list.add(transaction);
+            }
+
+            tableView.getItems().clear();
+            ocena = 0;
+            suma = 0;
+            for (Transaction transaction : list) {
+                tableView.getItems().add(transaction);
+                suma += transaction.getMoney();
+                ocena += transaction.getRate();
+            }
+            ocena = ocena / list.size();
+
+            tableView.getItems().add(new Transaction(null, null, null, null, null ,null));
+            tableView.getItems().add(new Transaction("----", "Podsumowanie", "-----", null, null, null));
+            tableView.getItems().add(new Transaction("Suma wydana", "Liczba płatności", "Srednia ocena", null, null, null));
+            tableView.getItems().add(new Transaction(String.valueOf(suma), String.valueOf(list.size()), String.valueOf(ocena), null, null, null));
+        }
     }
 }
