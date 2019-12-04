@@ -1,7 +1,8 @@
-package sample;
+package sample.sqloperation;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import sample.WindowOperation;
 
 import java.sql.*;
 
@@ -76,7 +77,8 @@ public class SqlOperation {
         windowOperation.warrningWindow("Usunięto kategorię", "Operacja przebiegła pomyślnie", "Kategoria został usunięta z bazy danych", Alert.AlertType.INFORMATION);
     }
 
-    public void addTransaction(Connection connection, WindowOperation windowOperation, int id, String kwota, String sklep, String kategoria, String data,  String sposob, String ocena, String komentarz) throws SQLException {
+    public void addTransaction(Connection connection, WindowOperation windowOperation, int id, String kwota, String sklep, String kategoria, String data,
+                               String sposob, String ocena, String komentarz) throws SQLException {
 
         CallableStatement stmt = connection.prepareCall("{call NowaTransakcja(?, ?, ?, ?, ?, ?, ?, ?)}");
 
@@ -84,10 +86,11 @@ public class SqlOperation {
         stmt.setString(2, kwota.replaceAll("\\.", ","));
         stmt.setString(3, sklep);
         stmt.setString(4, kategoria);
-        stmt.setString(5, data.substring(2, data.length()).replaceAll("-", "/"));
+        stmt.setString(5, data.replaceAll("-", "/"));
         stmt.setString(6, sposob);
         stmt.setString(7, ocena);
-        stmt.setString(8, komentarz);
+        if(komentarz != null ) stmt.setString(8, komentarz); else stmt.setNull(8, Types.VARCHAR);
+
 
 
         stmt.execute();

@@ -1,4 +1,4 @@
-package sample;
+package sample.sqloperation;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

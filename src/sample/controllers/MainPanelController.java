@@ -2,14 +2,11 @@ package sample.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
-import sample.SqlConnection;
-import sample.SqlOperation;
-import sample.TransactionValidator;
-import sample.WindowOperation;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import sample.*;
+import sample.sqloperation.SqlConnection;
+import sample.sqloperation.SqlOperation;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -22,11 +19,25 @@ import static sample.controllers.LoginController.loginLogin;
 public class MainPanelController {
 
     @FXML
-    public ComboBox comboPayment;
+    public CheckBox checkBox;
     @FXML
-    public TextField money;
+    private TableView tableView;
     @FXML
-    public DatePicker dateDate;
+    private ComboBox comboPayment;
+    @FXML
+    private TextField money;
+    @FXML
+    private DatePicker dateDate;
+    @FXML
+    private TableColumn firstColumn;
+    @FXML
+    private TableColumn secondColumn;
+    @FXML
+    private TableColumn thirdColumn;
+    @FXML
+    private TableColumn fourthColumn;
+    @FXML
+    private TableColumn fifthColumn;
     @FXML
     private ComboBox comboRate;
     @FXML
@@ -44,10 +55,12 @@ public class MainPanelController {
     private SqlConnection sqlConnection;
     private WindowOperation windowOperation;
     private SqlOperation sqlOperation;
+    private RightPanel rightPanel;
 
     public MainPanelController() throws SQLException {
         windowOperation = new WindowOperation();
         sqlOperation = new SqlOperation();
+        rightPanel = new RightPanel();
         String login = loginRegistration != null ? loginRegistration : loginLogin;
         sqlConnection = new SqlConnection();
         Statement stmt = sqlConnection.getConnection().createStatement();
@@ -67,10 +80,10 @@ public class MainPanelController {
 
     private void addStoresToMenu() throws SQLException {
         Statement stmt = sqlConnection.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT nazwa_sklepu from sklepy order by nazwa_sklepu");
+        ResultSet rs = stmt.executeQuery("SELECT nazwa_sklepu, ocena from sklepy order by nazwa_sklepu");
         comboStore.getItems().removeAll(comboStore.getItems());
         while (rs.next()) {
-            comboStore.getItems().add(rs.getString(1));
+            comboStore.getItems().add(rs.getString(1) + "  " + rs.getFloat(2));
         }
         rs.close();
         stmt.close();
@@ -170,12 +183,29 @@ public class MainPanelController {
     @FXML
     public void confirmButton(ActionEvent actionEvent) throws SQLException {
         TransactionValidator transactionValidator = new TransactionValidator();
-        if (transactionValidator.checkValidate(money.getText().replaceAll(",", "."), comboStore, comboCategory, comboRate, comboPayment, dateDate))
-        {
-            sqlOperation.addTransaction(sqlConnection.getConnection(), windowOperation, id,  money.getText(),
-                    comboStore.getSelectionModel().toString().toUpperCase(),  comboCategory.getSelectionModel().toString().toUpperCase(),
-                    dateDate.getValue().toString(),   comboPayment.getSelectionModel().toString().toUpperCase(),
-                    comboRate.getSelectionModel().toString(),  comment.getText().toUpperCase());
+        if (transactionValidator.checkValidate(money.getText().replaceAll(",", "."), comboStore, comboCategory, comboRate, comboPayment, dateDate)) {
+            sqlOperation.addTransaction(sqlConnection.getConnection(), windowOperation, id, money.getText(),
+                    comboStore.getValue().toString().toUpperCase(), comboCategory.getValue().toString().toUpperCase(),
+                    dateDate.getValue().toString(), comboPayment.getValue().toString().toUpperCase(),
+                    comboRate.getValue().toString(), comment.getText().toUpperCase());
+            clearAllFields();
         }
+    }
+
+    private void clearAllFields() {
+        money.clear();
+        comboStore.getSelectionModel().clearSelection();
+        comboCategory.getSelectionModel().clearSelection();
+        dateDate.getEditor().clear();
+        comboPayment.getSelectionModel().clearSelection();
+        comboRate.getSelectionModel().clearSelection();
+        comment.clear();
+    }
+
+
+    @FXML
+    public void checkBoxAction(ActionEvent actionEvent) throws SQLException {
+        if (checkBox.isSelected())
+            rightPanel.showAllTransactions(firstColumn, secondColumn, thirdColumn, fourthColumn, fifthColumn, tableView, id);
     }
 }

@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import sample.SqlConnection;
+import sample.sqloperation.SqlConnection;
 import sample.WindowOperation;
 
 import java.io.IOException;
