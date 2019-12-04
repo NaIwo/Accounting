@@ -9,6 +9,7 @@ import sample.sqloperation.SqlConnection;
 import sample.sqloperation.SqlOperation;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -80,37 +81,15 @@ public class MainPanelController {
     }
 
     public void initialize() throws SQLException {
-        addStoresToMenu(comboStore);
-        addStoresToMenu(comboStore1);
-        addCategoriesToMenu(comboCategory);
-        addCategoriesToMenu(comboCategory1);
+        sqlOperation.addStoresToMenu(comboStore, sqlConnection.getConnection());
+        sqlOperation.addStoresToMenu(comboStore1, sqlConnection.getConnection());
+        sqlOperation.addCategoriesToMenu(comboCategory, sqlConnection.getConnection());
+        sqlOperation.addCategoriesToMenu(comboCategory1, sqlConnection.getConnection());
         comboRate1.getItems().add(0);
         addRateToMenu(comboRate);
         addRateToMenu(comboRate1);
-        addPaymentToMenu(comboPayment);
+        sqlOperation.addPaymentToMenu(comboPayment, sqlConnection.getConnection());
         checkBoxAction();
-    }
-
-    private void addStoresToMenu(ComboBox comboBox) throws SQLException {
-        Statement stmt = sqlConnection.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT nazwa_sklepu, ocena from sklepy order by nazwa_sklepu");
-        comboBox.getItems().removeAll(comboBox.getItems());
-        while (rs.next()) {
-            comboBox.getItems().add(rs.getString(1));
-        }
-        rs.close();
-        stmt.close();
-    }
-
-    private void addCategoriesToMenu(ComboBox comboBox) throws SQLException {
-        Statement stmt = sqlConnection.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT nazwa_kategorii from kategorie order by nazwa_kategorii");
-        comboBox.getItems().removeAll(comboBox.getItems());
-        while (rs.next()) {
-            comboBox.getItems().add(rs.getString(1));
-        }
-        rs.close();
-        stmt.close();
     }
 
     private void addRateToMenu(ComboBox comboBox) {
@@ -118,17 +97,6 @@ public class MainPanelController {
         for (int i = 1; i < 6; i++) {
             comboBox.getItems().add(i);
         }
-    }
-
-    private void addPaymentToMenu(ComboBox comboBox) throws SQLException {
-        Statement stmt = sqlConnection.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT distinct sposob from platnosci order by sposob");
-        comboBox.getItems().removeAll(comboBox.getItems());
-        while (rs.next()) {
-            comboBox.getItems().add(rs.getString(1));
-        }
-        rs.close();
-        stmt.close();
     }
 
     @FXML
@@ -208,8 +176,8 @@ public class MainPanelController {
                     dateDate.getValue().toString(), comboPayment.getValue().toString().toUpperCase(),
                     comboRate.getValue().toString(), comment.getText().toUpperCase());
             clearAllFields();
-            addStoresToMenu(comboStore);
-            addStoresToMenu(comboStore1);
+            sqlOperation.addStoresToMenu(comboStore, sqlConnection.getConnection());
+            sqlOperation.addStoresToMenu(comboStore1, sqlConnection.getConnection());
             checkBoxAction();
             //TODO
             //Sprawdzenie ograniczen i wyswietlnie komunikatu
@@ -238,10 +206,12 @@ public class MainPanelController {
     public void comboCategoryAction(ActionEvent actionEvent) throws SQLException {
         checkBoxAction();
     }
+
     @FXML
     public void comboStoreAction(ActionEvent actionEvent) throws SQLException {
         checkBoxAction();
     }
+
     @FXML
     public void comboRateAction(ActionEvent actionEvent) throws SQLException {
         checkBoxAction();

@@ -1,6 +1,7 @@
 package sample.sqloperation;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import sample.WindowOperation;
 
@@ -88,12 +89,45 @@ public class SqlOperation {
         stmt.setString(5, data.replaceAll("-", "/"));
         stmt.setString(6, sposob);
         stmt.setString(7, ocena);
-        if(komentarz != null ) stmt.setString(8, komentarz); else stmt.setNull(8, Types.VARCHAR);
-
+        if (komentarz != null) stmt.setString(8, komentarz);
+        else stmt.setNull(8, Types.VARCHAR);
 
 
         stmt.execute();
         stmt.close();
         windowOperation.warrningWindow("Dodano transakcję", "Operacja przebiegła pomyślnie", "Transakcja została dodana do bazy danych", Alert.AlertType.INFORMATION);
+    }
+
+    public void addStoresToMenu(ComboBox comboBox, Connection connection) throws SQLException {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT nazwa_sklepu, ocena from sklepy order by nazwa_sklepu");
+        comboBox.getItems().removeAll(comboBox.getItems());
+        while (rs.next()) {
+            comboBox.getItems().add(rs.getString(1));
+        }
+        rs.close();
+        stmt.close();
+    }
+
+    public void addCategoriesToMenu(ComboBox comboBox, Connection connection) throws SQLException {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT nazwa_kategorii from kategorie order by nazwa_kategorii");
+        comboBox.getItems().removeAll(comboBox.getItems());
+        while (rs.next()) {
+            comboBox.getItems().add(rs.getString(1));
+        }
+        rs.close();
+        stmt.close();
+    }
+
+    public void addPaymentToMenu(ComboBox comboBox, Connection connection) throws SQLException {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT distinct sposob from platnosci order by sposob");
+        comboBox.getItems().removeAll(comboBox.getItems());
+        while (rs.next()) {
+            comboBox.getItems().add(rs.getString(1));
+        }
+        rs.close();
+        stmt.close();
     }
 }
