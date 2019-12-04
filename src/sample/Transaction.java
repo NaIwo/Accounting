@@ -6,14 +6,24 @@ public class Transaction {
     private String date;
     private Double  money;
     private Integer rate;
+    private String comment;
 
-    public void set(String store, String category, String date, Double  money, Integer  rate) {
+
+    public Transaction(String store, String category, String date, Double  money, Integer  rate, String comment) {
         this.store = store;
         this.category = category;
         this.date = date;
         this.money = money;
         this.rate = rate;
+        this.comment = comment;
     }
+    /*public void set(String store, String category, String date, Double  money, Integer  rate) {
+        this.store = store;
+        this.category = category;
+        this.date = date;
+        this.money = money;
+        this.rate = rate;
+    }*/
 
     public String getStore() {
         return this.store;
@@ -32,5 +42,8 @@ public class Transaction {
     }
     public Integer getRate() {
         return this.rate;
+    }
+    public String getComment() {
+        return this.comment;
     }
 }

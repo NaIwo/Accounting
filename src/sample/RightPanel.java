@@ -19,28 +19,28 @@ public class RightPanel {
     }
 
     public void showAllTransactions(TableColumn firstColumn, TableColumn secondColumn, TableColumn thirdColumn, TableColumn fourthColumn,
-                                    TableColumn fifthColumn, TableView tableView, Integer id) throws SQLException {
+                                    TableColumn fifthColumn, TableColumn sixthColumn, TableView tableView, Integer id) throws SQLException {
         firstColumn.setText("Nazwa_Sklepu");
         secondColumn.setText("Nazwa_Kategorii");
         thirdColumn.setText("Data");
         fourthColumn.setText("Kwota");
         fifthColumn.setText("Ocena");
+        sixthColumn.setText("Komentarz");
         firstColumn.setCellValueFactory(new PropertyValueFactory<>("store"));
         secondColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
         thirdColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         fourthColumn.setCellValueFactory(new PropertyValueFactory<>("money"));
         fifthColumn.setCellValueFactory(new PropertyValueFactory<>("rate"));
+        sixthColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
         getDataToTable(id, tableView);
     }
 
     private void getDataToTable(Integer id, TableView tableView) throws SQLException {
-        Transaction transaction = new Transaction();
         Statement stmt = sqlConnection.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery("select nazwa_sklepu, (select nazwa_kategorii from kategorie where id_kategorii=p.id_kategorii), data, " +
-                "(select kwota from platnosci where p.id_platnosci=id_platnosci), ocena from transakcje p where id_klienta=" + id + "order by data desc");
+                "(select kwota from platnosci where p.id_platnosci=id_platnosci), ocena, komentarz from transakcje p where id_klienta=" + id + "order by data desc");
         while (rs.next()) {
-            transaction.set(rs.getString(1), rs.getString(2), rs.getString(3).substring(0, 10), rs.getDouble(4), rs.getInt(5));
-            tableView.getItems().add(transaction);
+            tableView.getItems().add(new Transaction(rs.getString(1), rs.getString(2), rs.getString(3).substring(0, 10), rs.getDouble(4), rs.getInt(5), rs.getString(6)));
         }
         rs.close();
         stmt.close();

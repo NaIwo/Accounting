@@ -20,8 +20,9 @@
             <TableColumn fx:id="firstColumn" prefWidth="120.0" text="C1" />
             <TableColumn fx:id="secondColumn" prefWidth="120.0" text="C2" />
             <TableColumn fx:id="thirdColumn" minWidth="0.0" prefWidth="120.0" text="C3" />
-            <TableColumn fx:id="fourthColumn" prefWidth="120.0" text="C4" />
-            <TableColumn fx:id="fifthColumn" prefWidth="100.0" text="C5" />
+            <TableColumn fx:id="fourthColumn" prefWidth="65.0" text="C4" />
+            <TableColumn fx:id="fifthColumn" prefWidth="43.0" text="C5" />
+            <TableColumn fx:id="sixthColumn" prefWidth="123.0" text="C6" />
          </columns>
       </TableView>
       <TextField fx:id="money" layoutX="36.0" layoutY="165.0" prefHeight="34.0" prefWidth="169.0" promptText="Wprowadź kwotę" style="-fx-background-color: antiquewhite;" />

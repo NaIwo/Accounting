@@ -21,6 +21,8 @@ public class MainPanelController {
     @FXML
     public CheckBox checkBox;
     @FXML
+    public TableColumn sixthColumn;
+    @FXML
     private TableView tableView;
     @FXML
     private ComboBox comboPayment;
@@ -185,10 +187,12 @@ public class MainPanelController {
         TransactionValidator transactionValidator = new TransactionValidator();
         if (transactionValidator.checkValidate(money.getText().replaceAll(",", "."), comboStore, comboCategory, comboRate, comboPayment, dateDate)) {
             sqlOperation.addTransaction(sqlConnection.getConnection(), windowOperation, id, money.getText(),
-                    comboStore.getValue().toString().toUpperCase(), comboCategory.getValue().toString().toUpperCase(),
+                    comboStore.getValue().toString().toUpperCase().split(" ")[0], comboCategory.getValue().toString().toUpperCase(),
                     dateDate.getValue().toString(), comboPayment.getValue().toString().toUpperCase(),
                     comboRate.getValue().toString(), comment.getText().toUpperCase());
             clearAllFields();
+            addStoresToMenu();
+            checkBoxAction();
         }
     }
 
@@ -198,14 +202,17 @@ public class MainPanelController {
         comboCategory.getSelectionModel().clearSelection();
         dateDate.getEditor().clear();
         comboPayment.getSelectionModel().clearSelection();
-        comboRate.getSelectionModel().clearSelection();
         comment.clear();
     }
 
 
     @FXML
-    public void checkBoxAction(ActionEvent actionEvent) throws SQLException {
+    public void checkBoxAction() throws SQLException {
+        tableView.getItems().clear();
         if (checkBox.isSelected())
-            rightPanel.showAllTransactions(firstColumn, secondColumn, thirdColumn, fourthColumn, fifthColumn, tableView, id);
+            rightPanel.showAllTransactions(firstColumn, secondColumn, thirdColumn, fourthColumn, fifthColumn, sixthColumn, tableView, id);
+        else
+            System.out.println("Nie");
     }
+
 }
