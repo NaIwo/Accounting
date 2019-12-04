@@ -56,7 +56,6 @@ public class SqlOperation {
         Statement stmt = connection.createStatement();
         stmt.executeUpdate("delete from sklepy where nazwa_sklepu='" + store.getText().toUpperCase() + "'");
         stmt.close();
-        store.clear();
         windowOperation.warrningWindow("Usunięto sklep", "Operacja przebiegła pomyślnie", "Sklep został usunięty z bazy danych", Alert.AlertType.INFORMATION);
     }
 

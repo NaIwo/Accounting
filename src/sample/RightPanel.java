@@ -19,7 +19,7 @@ public class RightPanel {
     }
 
     public void showAllTransactions(TableColumn firstColumn, TableColumn secondColumn, TableColumn thirdColumn, TableColumn fourthColumn,
-                                    TableColumn fifthColumn, TableColumn sixthColumn, TableView tableView, Integer id) throws SQLException {
+                                    TableColumn fifthColumn, TableColumn sixthColumn, TableView tableView, Integer id, boolean mode) throws SQLException {
         firstColumn.setText("Nazwa_Sklepu");
         secondColumn.setText("Nazwa_Kategorii");
         thirdColumn.setText("Data");
@@ -32,10 +32,10 @@ public class RightPanel {
         fourthColumn.setCellValueFactory(new PropertyValueFactory<>("money"));
         fifthColumn.setCellValueFactory(new PropertyValueFactory<>("rate"));
         sixthColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
-        getDataToTable(id, tableView);
+        getDataToTable(id, tableView, mode);
     }
 
-    private void getDataToTable(Integer id, TableView tableView) throws SQLException {
+    private void getDataToTable(Integer id, TableView tableView, boolean mode) throws SQLException {
         Statement stmt = sqlConnection.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery("select nazwa_sklepu, (select nazwa_kategorii from kategorie where id_kategorii=p.id_kategorii), data, " +
                 "(select kwota from platnosci where p.id_platnosci=id_platnosci), ocena, komentarz from transakcje p where id_klienta=" + id + "order by data desc");
@@ -44,5 +44,7 @@ public class RightPanel {
         }
         rs.close();
         stmt.close();
+        if(!mode)
+            System.out.println("Wykonaj operacje");
     }
 }

@@ -89,9 +89,9 @@
             <Font name="System Bold Italic" size="12.0" />
          </font>
       </Text>
-      <ComboBox editable="true" layoutX="611.0" layoutY="68.0" prefHeight="25.0" prefWidth="125.0" promptText="Kategoria" />
-      <ComboBox editable="true" layoutX="750.0" layoutY="68.0" prefHeight="25.0" prefWidth="133.0" promptText="Sposób płatności" />
-      <ComboBox editable="true" layoutX="900.0" layoutY="68.0" prefHeight="25.0" prefWidth="106.0" promptText="Sklep" style="-fx-background-color: antiquewhite;" />
-      <ComboBox editable="true" layoutX="1019.0" layoutY="68.0" prefHeight="25.0" prefWidth="95.0" promptText="Ocena" />
+      <ComboBox fx:id="comboCategory1" editable="true" layoutX="611.0" layoutY="68.0" prefHeight="25.0" prefWidth="125.0" promptText="Kategoria" />
+      <ComboBox fx:id="comboPayment1" editable="true" layoutX="750.0" layoutY="68.0" prefHeight="25.0" prefWidth="133.0" promptText="Sposób płatności" />
+      <ComboBox fx:id="comboStore1" editable="true" layoutX="900.0" layoutY="68.0" prefHeight="25.0" prefWidth="106.0" promptText="Sklep" style="-fx-background-color: antiquewhite;" />
+      <ComboBox fx:id="comboRate1" editable="true" layoutX="1019.0" layoutY="68.0" prefHeight="25.0" prefWidth="95.0" promptText="Ocena" />
    </children>
 </Pane>

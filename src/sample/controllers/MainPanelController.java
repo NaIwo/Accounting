@@ -23,6 +23,14 @@ public class MainPanelController {
     @FXML
     public TableColumn sixthColumn;
     @FXML
+    public ComboBox comboCategory1;
+    @FXML
+    public ComboBox comboRate1;
+    @FXML
+    public ComboBox comboPayment1;
+    @FXML
+    public ComboBox comboStore1;
+    @FXML
     private TableView tableView;
     @FXML
     private ComboBox comboPayment;
@@ -74,47 +82,51 @@ public class MainPanelController {
     }
 
     public void initialize() throws SQLException {
-        addStoresToMenu();
-        addCategoriesToMenu();
-        addRateToMenu();
-        addPaymentToMenu();
+        addStoresToMenu(comboStore);
+        addStoresToMenu(comboStore1);
+        addCategoriesToMenu(comboCategory);
+        addCategoriesToMenu(comboCategory1);
+        addRateToMenu(comboRate);
+        addRateToMenu(comboRate1);
+        addPaymentToMenu(comboPayment);
+        addPaymentToMenu(comboPayment1);
     }
 
-    private void addStoresToMenu() throws SQLException {
+    private void addStoresToMenu(ComboBox comboBox) throws SQLException {
         Statement stmt = sqlConnection.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery("SELECT nazwa_sklepu, ocena from sklepy order by nazwa_sklepu");
-        comboStore.getItems().removeAll(comboStore.getItems());
+        comboBox.getItems().removeAll(comboBox.getItems());
         while (rs.next()) {
-            comboStore.getItems().add(rs.getString(1) + "  " + rs.getFloat(2));
+            comboBox.getItems().add(rs.getString(1));
         }
         rs.close();
         stmt.close();
     }
 
-    private void addCategoriesToMenu() throws SQLException {
+    private void addCategoriesToMenu(ComboBox comboBox) throws SQLException {
         Statement stmt = sqlConnection.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery("SELECT nazwa_kategorii from kategorie order by nazwa_kategorii");
-        comboCategory.getItems().removeAll(comboCategory.getItems());
+        comboBox.getItems().removeAll(comboBox.getItems());
         while (rs.next()) {
-            comboCategory.getItems().add(rs.getString(1));
+            comboBox.getItems().add(rs.getString(1));
         }
         rs.close();
         stmt.close();
     }
 
-    private void addRateToMenu() {
-        comboRate.getItems().removeAll(comboCategory.getItems());
+    private void addRateToMenu(ComboBox comboBox) {
+        comboBox.getItems().removeAll(comboBox.getItems());
         for (int i = 1; i < 6; i++) {
-            comboRate.getItems().add(i);
+            comboBox.getItems().add(i);
         }
     }
 
-    private void addPaymentToMenu() throws SQLException {
+    private void addPaymentToMenu(ComboBox comboBox) throws SQLException {
         Statement stmt = sqlConnection.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery("SELECT distinct sposob from platnosci order by sposob");
-        comboPayment.getItems().removeAll(comboPayment.getItems());
+        comboBox.getItems().removeAll(comboBox.getItems());
         while (rs.next()) {
-            comboPayment.getItems().add(rs.getString(1));
+            comboBox.getItems().add(rs.getString(1));
         }
         rs.close();
         stmt.close();
@@ -126,6 +138,7 @@ public class MainPanelController {
             if (!sqlOperation.checkIfStoreExists(sqlConnection.getConnection(), store)) {
                 sqlOperation.addStoreToDatabase(sqlConnection.getConnection(), store, id, windowOperation);
                 comboStore.getItems().add(store.getText().toUpperCase());
+                comboStore1.getItems().add(store.getText().toUpperCase());
                 store.clear();
             } else {
                 windowOperation.warrningWindow("Błąd", "Podany sklep już istnieje", "Podaj ponownie nazwę sklepu", Alert.AlertType.ERROR);
@@ -140,6 +153,7 @@ public class MainPanelController {
             if (!sqlOperation.checkIfCategoryExists(sqlConnection.getConnection(), category)) {
                 sqlOperation.addCategoryToDatabase(sqlConnection.getConnection(), category, id, windowOperation);
                 comboCategory.getItems().add(category.getText().toUpperCase());
+                comboCategory1.getItems().add(category.getText().toUpperCase());
                 category.clear();
             } else {
                 windowOperation.warrningWindow("Błąd", "Podana kategoria już istnieje", "Podaj ponownie nazwę kategorii", Alert.AlertType.ERROR);
@@ -161,6 +175,9 @@ public class MainPanelController {
         if (!store.getText().replaceAll(" ", "").equals("")) {
             if (sqlOperation.checkIfStoreWasAddedByUser(sqlConnection.getConnection(), store, id)) {
                 sqlOperation.removeStore(sqlConnection.getConnection(), store, windowOperation);
+                comboStore.getItems().remove(store.getText().toUpperCase());
+                comboStore1.getItems().remove(store.getText().toUpperCase());
+                store.clear();
             } else {
                 windowOperation.warrningWindow("Błąd", "Podano błędne dane", "Podany sklep nie istnieje lub nie został dodany przez Ciebie", Alert.AlertType.ERROR);
                 store.clear();
@@ -174,6 +191,7 @@ public class MainPanelController {
             if (sqlOperation.checkIfCategoryWasAddedByUser(sqlConnection.getConnection(), category, id)) {
                 sqlOperation.removeCategory(sqlConnection.getConnection(), category, windowOperation);
                 comboCategory.getItems().remove(category.getText().toUpperCase());
+                comboCategory1.getItems().remove(category.getText().toUpperCase());
                 category.clear();
             } else {
                 windowOperation.warrningWindow("Błąd", "Podano błędne dane", "Podana kategoria nie istnieje lub nie została dodana przez Ciebie", Alert.AlertType.ERROR);
@@ -191,8 +209,13 @@ public class MainPanelController {
                     dateDate.getValue().toString(), comboPayment.getValue().toString().toUpperCase(),
                     comboRate.getValue().toString(), comment.getText().toUpperCase());
             clearAllFields();
-            addStoresToMenu();
+            addStoresToMenu(comboStore);
+            addStoresToMenu(comboStore1);
             checkBoxAction();
+            //TODO
+            //Sprawdzenie ograniczen i wyswietlnie komunikatu
+            //Dodanie subskrypcji
+            //Edycja danych
         }
     }
 
@@ -205,14 +228,10 @@ public class MainPanelController {
         comment.clear();
     }
 
-
     @FXML
     public void checkBoxAction() throws SQLException {
         tableView.getItems().clear();
-        if (checkBox.isSelected())
-            rightPanel.showAllTransactions(firstColumn, secondColumn, thirdColumn, fourthColumn, fifthColumn, sixthColumn, tableView, id);
-        else
-            System.out.println("Nie");
+        rightPanel.showAllTransactions(firstColumn, secondColumn, thirdColumn, fourthColumn, fifthColumn, sixthColumn, tableView, id, checkBox.isSelected());
     }
 
 }
