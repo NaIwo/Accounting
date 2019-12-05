@@ -12,10 +12,15 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 
 import static sample.controllers.NicknameController.loginRegistration;
 import static sample.controllers.LoginController.loginLogin;
-
+//TODO
+// sprawdzanie czy login juz istnieje
+// dodanie ograniczen
+// indeksy
+// modyfikacja danych
 public class MainPanelController {
 
     @FXML
@@ -61,15 +66,17 @@ public class MainPanelController {
     @FXML
     private TextField comment;
 
-    private Integer id;
+    private static Integer id;
     private SqlConnection sqlConnection;
     private WindowOperation windowOperation;
+    private LocalDate localDate;
     private SqlOperation sqlOperation;
     private RightPanel rightPanel;
 
     public MainPanelController() throws SQLException {
         windowOperation = new WindowOperation();
         sqlOperation = new SqlOperation();
+        localDate = LocalDate.now();
         rightPanel = new RightPanel();
         String login = loginRegistration != null ? loginRegistration : loginLogin;
         sqlConnection = new SqlConnection();
@@ -81,6 +88,8 @@ public class MainPanelController {
         stmt.close();
     }
 
+
+
     public void initialize() throws SQLException {
         addStoresToMenu(comboStore);
         addStoresToMenu(comboStore1);
@@ -90,9 +99,14 @@ public class MainPanelController {
         addRateToMenu(comboRate1);
         addPaymentToMenu(comboPayment);
         addPaymentToMenu(comboPayment1);
+        if(sqlOperation.idInSubscription(id))
+            sqlOperation.setSubscribedValude(id, comboStore, comboCategory, comboRate, comboPayment, comment);
+
+        dateDate.setValue(localDate);
+
     }
 
-    private void addStoresToMenu(ComboBox comboBox) throws SQLException {
+    public void addStoresToMenu(ComboBox comboBox) throws SQLException {
         Statement stmt = sqlConnection.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery("SELECT nazwa_sklepu, ocena from sklepy order by nazwa_sklepu");
         comboBox.getItems().removeAll(comboBox.getItems());
@@ -103,7 +117,7 @@ public class MainPanelController {
         stmt.close();
     }
 
-    private void addCategoriesToMenu(ComboBox comboBox) throws SQLException {
+    public void addCategoriesToMenu(ComboBox comboBox) throws SQLException {
         Statement stmt = sqlConnection.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery("SELECT nazwa_kategorii from kategorie order by nazwa_kategorii");
         comboBox.getItems().removeAll(comboBox.getItems());
@@ -114,14 +128,14 @@ public class MainPanelController {
         stmt.close();
     }
 
-    private void addRateToMenu(ComboBox comboBox) {
+    public void addRateToMenu(ComboBox comboBox) {
         comboBox.getItems().removeAll(comboBox.getItems());
         for (int i = 1; i < 6; i++) {
             comboBox.getItems().add(i);
         }
     }
 
-    private void addPaymentToMenu(ComboBox comboBox) throws SQLException {
+    public void addPaymentToMenu(ComboBox comboBox) throws SQLException {
         Statement stmt = sqlConnection.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery("SELECT distinct sposob from platnosci order by sposob");
         comboBox.getItems().removeAll(comboBox.getItems());
@@ -162,8 +176,11 @@ public class MainPanelController {
         }
     }
 
+
+
     @FXML
     public void closeButtonAction(ActionEvent actionEvent) throws IOException, SQLException {
+        id = null;
         loginLogin = null;
         loginRegistration = null;
         sqlConnection.closeConnection();
@@ -208,14 +225,15 @@ public class MainPanelController {
                     comboStore.getValue().toString().toUpperCase().split(" ")[0], comboCategory.getValue().toString().toUpperCase(),
                     dateDate.getValue().toString(), comboPayment.getValue().toString().toUpperCase(),
                     comboRate.getValue().toString(), comment.getText().toUpperCase());
+
             clearAllFields();
-            addStoresToMenu(comboStore);
-            addStoresToMenu(comboStore1);
             checkBoxAction();
-            //TODO
-            //Sprawdzenie ograniczen i wyswietlnie komunikatu
-            //Dodanie subskrypcji
-            //Edycja danych
+            dateDate.setValue(localDate);
+            if(sqlOperation.idInSubscription(id))
+                sqlOperation.setSubscribedValude(id, comboStore, comboCategory, comboRate, comboPayment, comment);
+
+
+
         }
     }
 
@@ -224,6 +242,7 @@ public class MainPanelController {
         comboStore.getSelectionModel().clearSelection();
         comboCategory.getSelectionModel().clearSelection();
         dateDate.getEditor().clear();
+        dateDate.setValue(null);
         comboPayment.getSelectionModel().clearSelection();
         comment.clear();
     }
@@ -234,4 +253,17 @@ public class MainPanelController {
         rightPanel.showAllTransactions(firstColumn, secondColumn, thirdColumn, fourthColumn, fifthColumn, sixthColumn, tableView, id, checkBox.isSelected());
     }
 
+    @FXML
+    public void addSubscription(ActionEvent actionEvent) throws IOException {
+        windowOperation.goToNextWindow(actionEvent, "/resources/subscription.fxml", 600, 700);
+    }
+    public int getID()
+    {
+        return id;
+    }
+
+    @FXML
+    public void editPersonalData(ActionEvent actionEvent) throws IOException {
+        windowOperation.goToNextWindow(actionEvent, "/resources/personalInformation_panel.fxml", 600, 700);
+    }
 }

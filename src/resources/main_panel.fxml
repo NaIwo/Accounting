@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: burlywood; -fx-border-color: black; -fx-border-width: 12;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.MainPanelController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: burlywood; -fx-border-color: black; -fx-border-width: 12;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.MainPanelController">
    <children>
       <Separator layoutX="589.0" layoutY="13.0" orientation="VERTICAL" prefHeight="675.0" prefWidth="12.0" />
       <TableView fx:id="tableView" layoutX="595.0" layoutY="116.0" prefHeight="572.0" prefWidth="593.0" style="-fx-background-color: lightslategrey;">
@@ -59,7 +59,7 @@
             <Font name="Arial Bold Italic" size="12.0" />
          </font>
       </Button>
-      <Button layoutX="432.0" layoutY="523.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="125.0" style="-fx-background-color: gold;" text="Subskrypcja">
+      <Button layoutX="431.0" layoutY="469.0" mnemonicParsing="false" onAction="#addSubscription" prefHeight="34.0" prefWidth="125.0" style="-fx-background-color: gold;" text="Subskrypcja">
          <font>
             <Font name="Arial Bold Italic" size="11.0" />
          </font>
@@ -93,5 +93,10 @@
       <ComboBox fx:id="comboPayment1" editable="true" layoutX="750.0" layoutY="68.0" prefHeight="25.0" prefWidth="133.0" promptText="Sposób płatności" />
       <ComboBox fx:id="comboStore1" editable="true" layoutX="900.0" layoutY="68.0" prefHeight="25.0" prefWidth="106.0" promptText="Sklep" style="-fx-background-color: antiquewhite;" />
       <ComboBox fx:id="comboRate1" editable="true" layoutX="1019.0" layoutY="68.0" prefHeight="25.0" prefWidth="95.0" promptText="Ocena" />
+      <Button layoutX="431.0" layoutY="572.0" mnemonicParsing="false" onAction="#editPersonalData" prefHeight="34.0" prefWidth="125.0" style="-fx-background-color: gold;" text="Edycja danych">
+         <font>
+            <Font name="Arial Bold Italic" size="11.0" />
+         </font>
+      </Button>
    </children>
 </Pane>
