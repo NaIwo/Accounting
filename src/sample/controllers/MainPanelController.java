@@ -17,11 +17,12 @@ import java.time.LocalDate;
 
 import static sample.controllers.NicknameController.loginRegistration;
 import static sample.controllers.LoginController.loginLogin;
+
 //TODO
-// sprawdzanie czy login juz istnieje
-// dodanie ograniczen
+// poprawa menu z wyborem oceny,
 // indeksy
 // modyfikacja danych
+// przy cofaniu rejestracyjne wartości
 public class MainPanelController {
 
     @FXML
@@ -65,7 +66,7 @@ public class MainPanelController {
     @FXML
     private TextField comment;
 
-    private static Integer id;
+    public static Integer id;
     private SqlConnection sqlConnection;
     private WindowOperation windowOperation;
     private LocalDate localDate;
@@ -88,7 +89,6 @@ public class MainPanelController {
     }
 
 
-
     public void initialize() throws SQLException {
         sqlOperation.addStoresToMenu(comboStore, sqlConnection.getConnection());
         sqlOperation.addStoresToMenu(comboStore1, sqlConnection.getConnection());
@@ -99,7 +99,7 @@ public class MainPanelController {
         addRateToMenu(comboRate1);
         sqlOperation.addPaymentToMenu(comboPayment, sqlConnection.getConnection());
         checkBoxAction();
-        if(sqlOperation.idInSubscription(id))
+        if (sqlOperation.idInSubscription(id))
             sqlOperation.setSubscribedValude(id, comboStore, comboCategory, comboRate, comboPayment, comment);
         dateDate.setValue(localDate);
     }
@@ -140,7 +140,6 @@ public class MainPanelController {
             }
         }
     }
-
 
 
     @FXML
@@ -195,9 +194,8 @@ public class MainPanelController {
             clearAllFields();
             checkBoxAction();
             dateDate.setValue(localDate);
-            if(sqlOperation.idInSubscription(id))
+            if (sqlOperation.idInSubscription(id))
                 sqlOperation.setSubscribedValude(id, comboStore, comboCategory, comboRate, comboPayment, comment);
-
 
 
         }
@@ -224,15 +222,13 @@ public class MainPanelController {
     public void addSubscription(ActionEvent actionEvent) throws IOException {
         windowOperation.goToNextWindow(actionEvent, "/resources/subscription.fxml", 600, 700);
     }
-    public int getID()
-    {
-        return id;
-    }
+
 
     @FXML
     public void editPersonalData(ActionEvent actionEvent) throws IOException {
         windowOperation.goToNextWindow(actionEvent, "/resources/personalInformation_panel.fxml", 600, 700);
-      
+    }
+
     public void comboCategoryAction(ActionEvent actionEvent) throws SQLException {
         checkBoxAction();
     }
@@ -246,4 +242,5 @@ public class MainPanelController {
     public void comboRateAction(ActionEvent actionEvent) throws SQLException {
         checkBoxAction();
     }
+
 }

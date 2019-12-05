@@ -187,11 +187,11 @@ public class SqlOperation {
             if (!rs.getString(3).equals("null"))
                 payment.getSelectionModel().select(rs.getString(3));
             if (rs.getInt(4) != 0)
-                rate.getSelectionModel().select(rs.getInt(4));
+                rate.getSelectionModel().select(rs.getInt(4) - 1);
             if (!rs.getString(5).equals("null"))
                 comment.setText(rs.getString(5));
         }
-
+    }
 
     public void addStoresToMenu(ComboBox comboBox, Connection connection) throws SQLException {
         Statement stmt = connection.createStatement();
@@ -228,6 +228,7 @@ public class SqlOperation {
         rs.close();
         stmt.close();
         return false;
+    }
 
     public void addPaymentToMenu(ComboBox comboBox, Connection connection) throws SQLException {
         Statement stmt = connection.createStatement();

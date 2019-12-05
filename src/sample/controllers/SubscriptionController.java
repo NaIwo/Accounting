@@ -8,7 +8,7 @@ import sample.TransactionValidator;
 import sample.WindowOperation;
 import sample.sqloperation.SqlConnection;
 import sample.sqloperation.SqlOperation;
-
+import static sample.controllers.MainPanelController.id;
 import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -26,23 +26,26 @@ public class SubscriptionController {
     private ComboBox MarkPanel;
     @FXML
     private TextField CommentPanel;
-    private int id;
+
 
 
     public void initialize() throws SQLException {
-        MainPanelController operation = new MainPanelController();
         SqlOperation SQLoperation = new SqlOperation();
-
-        this.id = operation.getID();
-        operation.addCategoriesToMenu(CategoryPanel);
-        operation.addStoresToMenu(ShopPanel);
-        operation.addRateToMenu(MarkPanel);
-        operation.addPaymentToMenu(PaymentPanel);
+        SqlConnection connection = new SqlConnection();
+        SQLoperation.addCategoriesToMenu(CategoryPanel, connection.getConnection());
+        SQLoperation.addStoresToMenu(ShopPanel, connection.getConnection());
+        addRateToMenu(MarkPanel);
+        SQLoperation.addPaymentToMenu(PaymentPanel, connection.getConnection());
         if (SQLoperation.idInSubscription(id)) {
             SQLoperation.setSubscribedValude(id, ShopPanel, CategoryPanel, MarkPanel, PaymentPanel, CommentPanel);
         }
     }
-
+    private void addRateToMenu(ComboBox comboBox) {
+        //comboBox.getItems().removeAll(comboBox.getItems());
+        for (int i = 1; i < 6; i++) {
+            comboBox.getItems().add(i);
+        }
+    }
     public void saveChanges(ActionEvent actionEvent) throws IOException, SQLException {
         WindowOperation window = new WindowOperation();
         TransactionValidator validator = new TransactionValidator();
@@ -52,7 +55,10 @@ public class SubscriptionController {
         if (validator.checkValidateForSubscription(ShopPanel, CategoryPanel, MarkPanel, PaymentPanel, CommentPanel)) {
 
             if (SQLoperation.idInSubscription(id)) {
-                SQLoperation.updateSubscriptionToDatabase(connection.getConnection(), window, id, ShopPanel, CategoryPanel, MarkPanel, PaymentPanel, CommentPanel.getText().toUpperCase());
+                if(!CommentPanel.getText().isEmpty())
+                    SQLoperation.updateSubscriptionToDatabase(connection.getConnection(), window, id, ShopPanel, CategoryPanel, MarkPanel, PaymentPanel, CommentPanel.getText().toUpperCase());
+                else
+                    SQLoperation.updateSubscriptionToDatabase(connection.getConnection(), window, id, ShopPanel, CategoryPanel, MarkPanel, PaymentPanel, null);
             } else
             {
                 if(!CommentPanel.getText().isEmpty())
