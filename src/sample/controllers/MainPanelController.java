@@ -141,6 +141,7 @@ public class MainPanelController {
     public void removeStore(ActionEvent actionEvent) throws SQLException {
         if (!store.getText().replaceAll(" ", "").equals("")) {
             if (sqlOperation.checkIfStoreWasAddedByUser(sqlConnection.getConnection(), store, id)) {
+                System.out.println("Tutaj");
                 sqlOperation.removeStore(sqlConnection.getConnection(), store, windowOperation);
                 comboStore.getItems().remove(store.getText().toUpperCase());
                 comboStore1.getItems().remove(store.getText().toUpperCase());

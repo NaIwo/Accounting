@@ -56,6 +56,7 @@ public class SqlOperation {
     public void removeStore(Connection connection, TextField store, WindowOperation windowOperation) throws SQLException {
         Statement stmt = connection.createStatement();
         stmt.executeUpdate("delete from sklepy where nazwa_sklepu='" + store.getText().toUpperCase() + "'");
+        System.out.println("Przeszlo");
         stmt.close();
         windowOperation.warrningWindow("Usunięto sklep", "Operacja przebiegła pomyślnie", "Sklep został usunięty z bazy danych", Alert.AlertType.INFORMATION);
     }
