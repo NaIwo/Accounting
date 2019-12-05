@@ -13,10 +13,15 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 
 import static sample.controllers.NicknameController.loginRegistration;
 import static sample.controllers.LoginController.loginLogin;
-
+//TODO
+// sprawdzanie czy login juz istnieje
+// dodanie ograniczen
+// indeksy
+// modyfikacja danych
 public class MainPanelController {
 
     @FXML
@@ -60,15 +65,17 @@ public class MainPanelController {
     @FXML
     private TextField comment;
 
-    private Integer id;
+    private static Integer id;
     private SqlConnection sqlConnection;
     private WindowOperation windowOperation;
+    private LocalDate localDate;
     private SqlOperation sqlOperation;
     private RightPanel rightPanel;
 
     public MainPanelController() throws SQLException {
         windowOperation = new WindowOperation();
         sqlOperation = new SqlOperation();
+        localDate = LocalDate.now();
         rightPanel = new RightPanel();
         String login = loginRegistration != null ? loginRegistration : loginLogin;
         sqlConnection = new SqlConnection();
@@ -80,6 +87,8 @@ public class MainPanelController {
         stmt.close();
     }
 
+
+
     public void initialize() throws SQLException {
         sqlOperation.addStoresToMenu(comboStore, sqlConnection.getConnection());
         sqlOperation.addStoresToMenu(comboStore1, sqlConnection.getConnection());
@@ -90,6 +99,9 @@ public class MainPanelController {
         addRateToMenu(comboRate1);
         sqlOperation.addPaymentToMenu(comboPayment, sqlConnection.getConnection());
         checkBoxAction();
+        if(sqlOperation.idInSubscription(id))
+            sqlOperation.setSubscribedValude(id, comboStore, comboCategory, comboRate, comboPayment, comment);
+        dateDate.setValue(localDate);
     }
 
     private void addRateToMenu(ComboBox comboBox) {
@@ -129,8 +141,11 @@ public class MainPanelController {
         }
     }
 
+
+
     @FXML
     public void closeButtonAction(ActionEvent actionEvent) throws IOException, SQLException {
+        id = null;
         loginLogin = null;
         loginRegistration = null;
         sqlConnection.closeConnection();
@@ -176,14 +191,15 @@ public class MainPanelController {
                     comboStore.getValue().toString().toUpperCase().split(" ")[0], comboCategory.getValue().toString().toUpperCase(),
                     dateDate.getValue().toString(), comboPayment.getValue().toString().toUpperCase(),
                     comboRate.getValue().toString(), comment.getText().toUpperCase());
+
             clearAllFields();
-            sqlOperation.addStoresToMenu(comboStore, sqlConnection.getConnection());
-            sqlOperation.addStoresToMenu(comboStore1, sqlConnection.getConnection());
             checkBoxAction();
-            //TODO
-            //Sprawdzenie ograniczen i wyswietlnie komunikatu
-            //Dodanie subskrypcji
-            //Edycja danych
+            dateDate.setValue(localDate);
+            if(sqlOperation.idInSubscription(id))
+                sqlOperation.setSubscribedValude(id, comboStore, comboCategory, comboRate, comboPayment, comment);
+
+
+
         }
     }
 
@@ -192,6 +208,7 @@ public class MainPanelController {
         comboStore.getSelectionModel().clearSelection();
         comboCategory.getSelectionModel().clearSelection();
         dateDate.getEditor().clear();
+        dateDate.setValue(null);
         comboPayment.getSelectionModel().clearSelection();
         comment.clear();
     }
@@ -204,6 +221,18 @@ public class MainPanelController {
     }
 
     @FXML
+    public void addSubscription(ActionEvent actionEvent) throws IOException {
+        windowOperation.goToNextWindow(actionEvent, "/resources/subscription.fxml", 600, 700);
+    }
+    public int getID()
+    {
+        return id;
+    }
+
+    @FXML
+    public void editPersonalData(ActionEvent actionEvent) throws IOException {
+        windowOperation.goToNextWindow(actionEvent, "/resources/personalInformation_panel.fxml", 600, 700);
+      
     public void comboCategoryAction(ActionEvent actionEvent) throws SQLException {
         checkBoxAction();
     }
