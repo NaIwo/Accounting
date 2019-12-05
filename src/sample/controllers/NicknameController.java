@@ -8,9 +8,7 @@ import sample.sqloperation.SqlConnection;
 import sample.WindowOperation;
 
 import java.io.IOException;
-import java.sql.CallableStatement;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 
 public class NicknameController {
 
@@ -21,6 +19,7 @@ public class NicknameController {
     @FXML
     private TextField password2Label;
     public static String loginRegistration;
+    private SqlConnection sqlConnection;
 
 
     @FXML
@@ -33,8 +32,11 @@ public class NicknameController {
             window_operation.warrningWindow("Ups", "Hasła nie są zgodne!", "Spróbuj ponownie.", Alert.AlertType.WARNING);
         } else {
             try {
-                addUserToDatabase();
-                window_operation.goToNextWindow(actionEvent, "/resources/main_panel.fxml", 1200, 700);
+                if(!checkIfLoginExists()) {
+                    addUserToDatabase();
+                    window_operation.goToNextWindow(actionEvent, "/resources/main_panel.fxml", 1200, 700);
+                }
+                else window_operation.warrningWindow("Ups","Podany login już istnieje", "Podaj ponownie", Alert.AlertType.ERROR);
             } catch (SQLException | IOException ex) {
                 System.out.println("Nie udało się dodać użytkownika do bazy danych");
             }
@@ -44,8 +46,6 @@ public class NicknameController {
     private void addUserToDatabase() throws SQLException {
         loginRegistration = loginLabel.getText();
         RegistrationController registrationController = new RegistrationController();
-        SqlConnection sqlConnection = new SqlConnection();
-        sqlConnection.connect();
         CallableStatement stmt = sqlConnection.getConnection().prepareCall("{call NOWYUSER(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
         stmt.setString(1, registrationController.getName());
@@ -66,6 +66,18 @@ public class NicknameController {
 
         stmt.execute();
         stmt.close();
+    }
+
+    private boolean checkIfLoginExists() throws SQLException {
+        boolean result;
+        sqlConnection = new SqlConnection();
+        sqlConnection.connect();
+        Statement stmt = sqlConnection.getConnection().createStatement();
+        ResultSet rs = stmt.executeQuery("Select login from dane_logowania where login='" + loginLabel.getText() + "'");
+        result = rs.next();
+        rs.close();
+        stmt.close();
+        return result;
     }
 
     @FXML

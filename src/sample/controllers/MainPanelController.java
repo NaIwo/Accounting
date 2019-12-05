@@ -9,6 +9,7 @@ import sample.sqloperation.SqlConnection;
 import sample.sqloperation.SqlOperation;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -28,13 +29,11 @@ public class MainPanelController {
     @FXML
     public TableColumn sixthColumn;
     @FXML
-    public ComboBox comboCategory1;
+    private ComboBox comboCategory1;
     @FXML
-    public ComboBox comboRate1;
+    private ComboBox comboRate1;
     @FXML
-    public ComboBox comboPayment1;
-    @FXML
-    public ComboBox comboStore1;
+    private ComboBox comboStore1;
     @FXML
     private TableView tableView;
     @FXML
@@ -91,59 +90,25 @@ public class MainPanelController {
 
 
     public void initialize() throws SQLException {
-        addStoresToMenu(comboStore);
-        addStoresToMenu(comboStore1);
-        addCategoriesToMenu(comboCategory);
-        addCategoriesToMenu(comboCategory1);
+        sqlOperation.addStoresToMenu(comboStore, sqlConnection.getConnection());
+        sqlOperation.addStoresToMenu(comboStore1, sqlConnection.getConnection());
+        sqlOperation.addCategoriesToMenu(comboCategory, sqlConnection.getConnection());
+        sqlOperation.addCategoriesToMenu(comboCategory1, sqlConnection.getConnection());
+        comboRate1.getItems().add(0);
         addRateToMenu(comboRate);
         addRateToMenu(comboRate1);
-        addPaymentToMenu(comboPayment);
-        addPaymentToMenu(comboPayment1);
+        sqlOperation.addPaymentToMenu(comboPayment, sqlConnection.getConnection());
+        checkBoxAction();
         if(sqlOperation.idInSubscription(id))
             sqlOperation.setSubscribedValude(id, comboStore, comboCategory, comboRate, comboPayment, comment);
-
         dateDate.setValue(localDate);
-
     }
 
-    public void addStoresToMenu(ComboBox comboBox) throws SQLException {
-        Statement stmt = sqlConnection.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT nazwa_sklepu, ocena from sklepy order by nazwa_sklepu");
-        comboBox.getItems().removeAll(comboBox.getItems());
-        while (rs.next()) {
-            comboBox.getItems().add(rs.getString(1));
-        }
-        rs.close();
-        stmt.close();
-    }
-
-    public void addCategoriesToMenu(ComboBox comboBox) throws SQLException {
-        Statement stmt = sqlConnection.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT nazwa_kategorii from kategorie order by nazwa_kategorii");
-        comboBox.getItems().removeAll(comboBox.getItems());
-        while (rs.next()) {
-            comboBox.getItems().add(rs.getString(1));
-        }
-        rs.close();
-        stmt.close();
-    }
-
-    public void addRateToMenu(ComboBox comboBox) {
-        comboBox.getItems().removeAll(comboBox.getItems());
+    private void addRateToMenu(ComboBox comboBox) {
+        //comboBox.getItems().removeAll(comboBox.getItems());
         for (int i = 1; i < 6; i++) {
             comboBox.getItems().add(i);
         }
-    }
-
-    public void addPaymentToMenu(ComboBox comboBox) throws SQLException {
-        Statement stmt = sqlConnection.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT distinct sposob from platnosci order by sposob");
-        comboBox.getItems().removeAll(comboBox.getItems());
-        while (rs.next()) {
-            comboBox.getItems().add(rs.getString(1));
-        }
-        rs.close();
-        stmt.close();
     }
 
     @FXML
@@ -191,6 +156,7 @@ public class MainPanelController {
     public void removeStore(ActionEvent actionEvent) throws SQLException {
         if (!store.getText().replaceAll(" ", "").equals("")) {
             if (sqlOperation.checkIfStoreWasAddedByUser(sqlConnection.getConnection(), store, id)) {
+                System.out.println("Tutaj");
                 sqlOperation.removeStore(sqlConnection.getConnection(), store, windowOperation);
                 comboStore.getItems().remove(store.getText().toUpperCase());
                 comboStore1.getItems().remove(store.getText().toUpperCase());
@@ -248,9 +214,10 @@ public class MainPanelController {
     }
 
     @FXML
-    public void checkBoxAction() throws SQLException {
+    private void checkBoxAction() throws SQLException {
         tableView.getItems().clear();
-        rightPanel.showAllTransactions(firstColumn, secondColumn, thirdColumn, fourthColumn, fifthColumn, sixthColumn, tableView, id, checkBox.isSelected());
+        rightPanel.showAllTransactions(firstColumn, secondColumn, thirdColumn, fourthColumn, fifthColumn, sixthColumn, tableView, id, checkBox.isSelected(),
+                comboStore1, comboCategory1, comboRate1);
     }
 
     @FXML
@@ -265,5 +232,18 @@ public class MainPanelController {
     @FXML
     public void editPersonalData(ActionEvent actionEvent) throws IOException {
         windowOperation.goToNextWindow(actionEvent, "/resources/personalInformation_panel.fxml", 600, 700);
+      
+    public void comboCategoryAction(ActionEvent actionEvent) throws SQLException {
+        checkBoxAction();
+    }
+
+    @FXML
+    public void comboStoreAction(ActionEvent actionEvent) throws SQLException {
+        checkBoxAction();
+    }
+
+    @FXML
+    public void comboRateAction(ActionEvent actionEvent) throws SQLException {
+        checkBoxAction();
     }
 }

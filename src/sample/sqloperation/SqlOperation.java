@@ -59,6 +59,7 @@ public class SqlOperation {
     public void removeStore(Connection connection, TextField store, WindowOperation windowOperation) throws SQLException {
         Statement stmt = connection.createStatement();
         stmt.executeUpdate("delete from sklepy where nazwa_sklepu='" + store.getText().toUpperCase() + "'");
+        System.out.println("Przeszlo");
         stmt.close();
         windowOperation.warrningWindow("Usunięto sklep", "Operacja przebiegła pomyślnie", "Sklep został usunięty z bazy danych", Alert.AlertType.INFORMATION);
     }
@@ -100,6 +101,7 @@ public class SqlOperation {
         stmt.close();
         windowOperation.warrningWindow("Dodano transakcję", "Operacja przebiegła pomyślnie", "Transakcja została dodana do bazy danych", Alert.AlertType.INFORMATION);
     }
+
 
     public void insertSubscriptionToDatabase(Connection connection, WindowOperation windowOperation, int id, ComboBox store, ComboBox category, ComboBox rate, ComboBox payment, String comment) throws SQLException {
         Statement stmt = connection.createStatement();
@@ -190,9 +192,29 @@ public class SqlOperation {
                 comment.setText(rs.getString(5));
         }
 
+
+    public void addStoresToMenu(ComboBox comboBox, Connection connection) throws SQLException {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT nazwa_sklepu, ocena from sklepy order by nazwa_sklepu");
+        comboBox.getItems().removeAll(comboBox.getItems());
+        while (rs.next()) {
+            comboBox.getItems().add(rs.getString(1));
+        }
         rs.close();
         stmt.close();
     }
+
+    public void addCategoriesToMenu(ComboBox comboBox, Connection connection) throws SQLException {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT nazwa_kategorii from kategorie order by nazwa_kategorii");
+        comboBox.getItems().removeAll(comboBox.getItems());
+        while (rs.next()) {
+            comboBox.getItems().add(rs.getString(1));
+        }
+        rs.close();
+        stmt.close();
+    }
+
 
     public Boolean idInSubscription(int id) throws SQLException {
         SqlConnection sqlConnection = new SqlConnection();
@@ -206,6 +228,16 @@ public class SqlOperation {
         rs.close();
         stmt.close();
         return false;
+
+    public void addPaymentToMenu(ComboBox comboBox, Connection connection) throws SQLException {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT distinct sposob from platnosci order by sposob");
+        comboBox.getItems().removeAll(comboBox.getItems());
+        while (rs.next()) {
+            comboBox.getItems().add(rs.getString(1));
+        }
+        rs.close();
+        stmt.close();
     }
 }
 
