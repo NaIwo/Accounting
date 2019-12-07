@@ -1,10 +1,8 @@
 package sample.sqloperation;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import sample.WindowOperation;
+import sample.controllers.RegistrationController;
 
 import javax.sql.PooledConnection;
 import java.sql.*;
@@ -59,7 +57,6 @@ public class SqlOperation {
     public void removeStore(Connection connection, TextField store, WindowOperation windowOperation) throws SQLException {
         Statement stmt = connection.createStatement();
         stmt.executeUpdate("delete from sklepy where nazwa_sklepu='" + store.getText().toUpperCase() + "'");
-        System.out.println("Przeszlo");
         stmt.close();
         windowOperation.warrningWindow("Usunięto sklep", "Operacja przebiegła pomyślnie", "Sklep został usunięty z bazy danych", Alert.AlertType.INFORMATION);
     }
@@ -240,6 +237,135 @@ public class SqlOperation {
         rs.close();
         stmt.close();
     }
+
+    public boolean readData(Connection conn, TextField loginLabel, PasswordField passwordLabel) throws SQLException {
+        boolean result;
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT login, haslo from Dane_logowania where login='" + loginLabel.getText() + "' and haslo='" + passwordLabel.getText() + "'");
+        result = rs.next();
+        rs.close();
+        stmt.close();
+        return result;
+    }
+
+    public void addUserToDatabase(RegistrationController registrationController, Connection sqlConnection, TextField loginLabel, TextField passwordLabel) throws SQLException {
+
+
+        CallableStatement stmt = sqlConnection.prepareCall("{call NOWYUSER(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+
+        stmt.setString(1, registrationController.getName());
+        stmt.setString(2, registrationController.getSurname());
+        stmt.setString(3, loginLabel.getText());
+        stmt.setString(4, passwordLabel.getText());
+        stmt.setString(5, registrationController.getStreet());
+        stmt.setInt(6, registrationController.getHouse());
+        if (registrationController.getHome() != null) stmt.setInt(7, registrationController.getHome());
+        else stmt.setNull(7, Types.INTEGER);
+        stmt.setInt(8, registrationController.getPostalcode());
+        stmt.setString(9, registrationController.getCity());
+        stmt.setString(10, registrationController.getEmail());
+        if (registrationController.getPhoneone() != null) stmt.setInt(11, registrationController.getPhoneone());
+        else stmt.setNull(11, Types.INTEGER);
+        if (registrationController.getPhonetwo() != null) stmt.setInt(12, registrationController.getPhonetwo());
+        else stmt.setNull(12, Types.INTEGER);
+
+        stmt.execute();
+        stmt.close();
+    }
+
+    public void readUserData(Connection connection, Integer id, TextField nameLabel, TextField surnameLabel, TextField streetLabel, TextField houseLabel, TextField homeLabel, TextField postcodeLabel,
+                             TextField cityLabel, TextField emailLabel, TextField phoneoneLabel, TextField phonetwoLabel, TextField haslo, TextField hasloConfirm, TextField login) throws SQLException {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT IMIE, NAZWISKO, K.LOGIN, HASLO, ULICA, NR_DOMU, NR_MIESZKANIA, KOD_POCZTOWY, MIEJSCOWOSC, EMAIL, NR_TELEFONU1, Nr_TELEFONU2 " +
+                "FROM KLIENCI K " +
+                "LEFT JOIN DANE_LOGOWANIA D ON K.LOGIN = D.LOGIN " +
+                "LEFT JOIN ADRESY A ON A.ID_ADRESU = K.ID_ADRESU " +
+                "LEFT JOIN KONTAKTY KT ON K.ID_KONTAKTU = KT.ID_KONTAKTU WHERE ID_KLIENTA = " + id);
+        if (rs.next()) {
+            nameLabel.setText(rs.getString(1));
+            surnameLabel.setText(rs.getString(2));
+            login.setText(rs.getString(3));
+            haslo.setText(rs.getString(4));
+            hasloConfirm.setText(rs.getString(4));
+            streetLabel.setText(rs.getString(5));
+            houseLabel.setText(rs.getString(6));
+            if (rs.getInt(7) != 0) homeLabel.setText(rs.getString(7));
+            postcodeLabel.setText(rs.getString(8).substring(0,2) + "-" + rs.getString(8).substring(2, rs.getString(8).length()));
+            cityLabel.setText(rs.getString(9));
+            emailLabel.setText(rs.getString(10));
+            if (rs.getInt(11) != 0) phoneoneLabel.setText(rs.getString(10));
+            if (rs.getInt(12) != 0) phonetwoLabel.setText(rs.getString(11));
+
+        }
+        rs.close();
+        stmt.close();
+    }
+
+    public boolean checkIfLoginExists(SqlConnection sqlConnection, TextField loginLabel) throws SQLException {
+        boolean result;
+        sqlConnection.connect();
+        Statement stmt = sqlConnection.getConnection().createStatement();
+        ResultSet rs = stmt.executeQuery("Select login from dane_logowania where login='" + loginLabel.getText() + "'");
+        result = rs.next();
+        rs.close();
+        stmt.close();
+        return result;
+    }
+
+    public boolean checkIfLoginUpdatingExists(SqlConnection sqlConnection, TextField loginLabel, Integer id) throws SQLException {
+        boolean result;
+        sqlConnection.connect();
+        Statement stmt = sqlConnection.getConnection().createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT K.LOGIN FROM KLIENCI K LEFT JOIN DANE_LOGOWANIA D ON K.LOGIN = D.LOGIN " +
+                "WHERE K.LOGIN = " + "'" + loginLabel.getText() + "'" + " AND K.ID_KLIENTA != " + id);
+        result = rs.next();
+        rs.close();
+        stmt.close();
+        return result;
+    }
+
+    public void updateUserInformation(Connection connection, WindowOperation windowOperation, Integer id,  TextField[] allTextFields) throws SQLException {
+
+        Statement info = connection.createStatement();
+        ResultSet rs = info.executeQuery("SELECT A.ID_ADRESU, K.ID_KONTAKTU, D.LOGIN " +
+                "FROM KLIENCI K " +
+                "LEFT JOIN DANE_LOGOWANIA D ON K.LOGIN = D.LOGIN " +
+                "LEFT JOIN ADRESY A ON A.ID_ADRESU = K.ID_ADRESU " +
+                "LEFT JOIN KONTAKTY KT ON K.ID_KONTAKTU = KT.ID_KONTAKTU WHERE ID_KLIENTA = " + id);
+
+
+        CallableStatement stmt = connection.prepareCall("{call updateUserInformation(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+
+        if(rs.next())
+        {
+            stmt.setString(1, allTextFields[0].getText());
+            stmt.setString(2, allTextFields[1].getText());
+            stmt.setString(3, allTextFields[12].getText());
+            stmt.setString(4, allTextFields[10].getText());
+            stmt.setString(5, allTextFields[2].getText());
+            stmt.setInt(6, Integer.parseInt(allTextFields[3].getText().replaceAll(" ", "")));
+            if(!allTextFields[4].getText().isEmpty()) stmt.setInt(7, Integer.parseInt(allTextFields[4].getText().replaceAll(" ", "")));
+            else stmt.setNull(7, Types.INTEGER);
+            stmt.setInt(8, Integer.parseInt(allTextFields[5].getText().replaceAll("-", "").replaceAll(" ", "")));
+            stmt.setString(9, allTextFields[6].getText());
+            stmt.setString(10, allTextFields[7].getText());
+            if(!allTextFields[8].getText().isEmpty()) stmt.setInt(11, Integer.parseInt(allTextFields[8].getText()));
+            else stmt.setNull(11, Types.INTEGER);
+            if(!allTextFields[9].getText().isEmpty()) stmt.setInt(12, Integer.parseInt(allTextFields[9].getText()));
+            else stmt.setNull(12, Types.INTEGER);
+            stmt.setInt(13, Integer.parseInt(rs.getString(1).replaceAll(" ", "")));
+            stmt.setInt(14, Integer.parseInt(rs.getString(2).replaceAll(" ","")));
+            stmt.setString(15, rs.getString(3));
+            stmt.setInt(16, id);
+        }
+
+
+        stmt.execute();
+        stmt.close();
+        info.close();
+        windowOperation.warrningWindow("Dodano transakcję", "Operacja przebiegła pomyślnie", "Transakcja została dodana do bazy danych", Alert.AlertType.INFORMATION);
+    }
+
 }
 
 
