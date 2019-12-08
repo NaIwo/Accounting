@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="600.0" style="-fx-background-color: burlywood; -fx-border-color: black; -fx-border-width: 12;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.RestrictionPanelController">
+   <children>
+      <Text layoutX="193.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ograniczenia">
+         <font>
+            <Font name="System Bold Italic" size="34.0" />
+         </font>
+         <fill>
+            <RadialGradient centerX="0.20222220950656467" centerY="0.5648854889032495" radius="0.7242991188976252">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </fill>
+      </Text>
+      <TableView layoutX="12.0" layoutY="355.0" prefHeight="297.0" prefWidth="576.0">
+        <columns>
+          <TableColumn prefWidth="120.0" text="Kategoria" />
+          <TableColumn prefWidth="132.800048828125" text="Wartość ograniczenia" />
+            <TableColumn prefWidth="116.79998779296875" text="Aktualny wydatek" />
+            <TableColumn prefWidth="207.20001220703125" text="Komentarz" />
+        </columns>
+      </TableView>
+      <Text layoutX="141.0" layoutY="669.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ograniczenia nakładamy na kategorię na aktualny miesiąc, po jego przekroczeniu otrzymamy odpowiedni komunikat." textAlignment="CENTER" wrappingWidth="317.9867248535156">
+         <font>
+            <Font name="Arial" size="12.0" />
+         </font>
+      </Text>
+      <Text layoutX="145.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wybierz kategorię na którą zostanie nałożone ograniczenie">
+         <font>
+            <Font name="Arial Narrow Italic" size="13.0" />
+         </font>
+         <fill>
+            <RadialGradient centerX="0.2511111365424262" centerY="0.5" radius="0.6308411304081711">
+               <stops>
+                  <Stop color="RED" />
+                  <Stop color="BLACK" offset="0.9938931297709922" />
+                  <Stop color="BLACK" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </fill>
+      </Text>
+      <ComboBox fx:id="categoryController" editable="true" layoutX="239.0" layoutY="114.0" prefWidth="150.0" />
+      <Text layoutX="176.0" layoutY="163.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj kwotę która będzie stanowić ograniczenie">
+         <font>
+            <Font name="Arial Narrow Italic" size="13.0" />
+         </font>
+         <fill>
+            <RadialGradient centerX="0.2511111365424262" centerY="0.5" radius="0.6308411304081711">
+               <stops>
+                  <Stop color="RED" />
+                  <Stop color="BLACK" offset="0.9938931297709922" />
+                  <Stop color="BLACK" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </fill>
+      </Text>
+      <Text layoutX="75.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dodaj komentarz który zostanie wyświetlony w przypadku przekroczenia limitu">
+         <font>
+            <Font name="Arial Narrow Italic" size="13.0" />
+         </font>
+         <fill>
+            <RadialGradient centerX="0.2511111365424262" centerY="0.5" radius="0.6308411304081711">
+               <stops>
+                  <Stop color="RED" />
+                  <Stop color="BLACK" offset="0.9938931297709922" />
+                  <Stop color="BLACK" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </fill>
+      </Text>
+      <TextField fx:id="payment" layoutX="239.0" layoutY="183.0" />
+      <TextField fx:id="comment" layoutX="74.0" layoutY="261.0" prefHeight="45.0" prefWidth="451.0" />
+      <Button layoutX="33.0" layoutY="659.0" mnemonicParsing="false" onAction="#backButton" style="-fx-background-color: midnightblue;" text="Cofnij" textFill="#00d9ff">
+         <font>
+            <Font name="System Bold Italic" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="75.0" layoutY="317.0" mnemonicParsing="false" onAction="#saveRestriction" prefHeight="27.0" prefWidth="164.0" style="-fx-background-color: midnightblue;" text="Zapisz" textFill="#00d9ff">
+         <font>
+            <Font name="System Bold Italic" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="361.0" layoutY="317.0" mnemonicParsing="false" onAction="#deleteResrtrictionButton" prefHeight="27.0" prefWidth="164.0" style="-fx-background-color: midnightblue;" text="Usuń ograniczenie" textFill="#00d9ff">
+         <font>
+            <Font name="System Bold Italic" size="12.0" />
+         </font>
+      </Button>
+   </children>
+</Pane>

@@ -13,10 +13,16 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 
 import static sample.controllers.NicknameController.loginRegistration;
 import static sample.controllers.LoginController.loginLogin;
 
+//TODO
+// poprawa menu z wyborem oceny,
+// indeksy
+// modyfikacja danych
+// przy cofaniu rejestracyjne wartości
 public class MainPanelController {
 
     @FXML
@@ -60,15 +66,17 @@ public class MainPanelController {
     @FXML
     private TextField comment;
 
-    private Integer id;
+    public static Integer id;
     private SqlConnection sqlConnection;
     private WindowOperation windowOperation;
+    private LocalDate localDate;
     private SqlOperation sqlOperation;
     private RightPanel rightPanel;
 
     public MainPanelController() throws SQLException {
         windowOperation = new WindowOperation();
         sqlOperation = new SqlOperation();
+        localDate = LocalDate.now();
         rightPanel = new RightPanel();
         String login = loginRegistration != null ? loginRegistration : loginLogin;
         sqlConnection = new SqlConnection();
@@ -80,6 +88,7 @@ public class MainPanelController {
         stmt.close();
     }
 
+
     public void initialize() throws SQLException {
         sqlOperation.addStoresToMenu(comboStore, sqlConnection.getConnection());
         sqlOperation.addStoresToMenu(comboStore1, sqlConnection.getConnection());
@@ -89,7 +98,16 @@ public class MainPanelController {
         addRateToMenu(comboRate);
         addRateToMenu(comboRate1);
         sqlOperation.addPaymentToMenu(comboPayment, sqlConnection.getConnection());
+        if(checkBox.isSelected())
+        {
+            comboCategory1.setDisable(true);
+            comboStore1.setDisable(true);
+            comboRate1.setDisable(true);
+        }
         checkBoxAction();
+        if (sqlOperation.idInSubscription(id))
+            sqlOperation.setSubscribedValude(id, comboStore, comboCategory, comboRate, comboPayment, comment);
+        dateDate.setValue(localDate);
     }
 
     private void addRateToMenu(ComboBox comboBox) {
@@ -129,8 +147,11 @@ public class MainPanelController {
         }
     }
 
+
     @FXML
     public void closeButtonAction(ActionEvent actionEvent) throws IOException, SQLException {
+
+        id = null;
         loginLogin = null;
         loginRegistration = null;
         sqlConnection.closeConnection();
@@ -171,19 +192,25 @@ public class MainPanelController {
     @FXML
     public void confirmButton(ActionEvent actionEvent) throws SQLException {
         TransactionValidator transactionValidator = new TransactionValidator();
+
+
+
         if (transactionValidator.checkValidate(money.getText().replaceAll(",", "."), comboStore, comboCategory, comboRate, comboPayment, dateDate)) {
             sqlOperation.addTransaction(sqlConnection.getConnection(), windowOperation, id, money.getText(),
                     comboStore.getValue().toString().toUpperCase().split(" ")[0], comboCategory.getValue().toString().toUpperCase(),
                     dateDate.getValue().toString(), comboPayment.getValue().toString().toUpperCase(),
                     comboRate.getValue().toString(), comment.getText().toUpperCase());
+
+
+            sqlOperation.checkIfExceeded(sqlConnection.getConnection(), windowOperation, id, comboCategory);
+            //sprawdzenie czy nie przekrocozno ograniczenia
             clearAllFields();
-            sqlOperation.addStoresToMenu(comboStore, sqlConnection.getConnection());
-            sqlOperation.addStoresToMenu(comboStore1, sqlConnection.getConnection());
             checkBoxAction();
-            //TODO
-            //Sprawdzenie ograniczen i wyswietlnie komunikatu
-            //Dodanie subskrypcji
-            //Edycja danych
+            dateDate.setValue(localDate);
+            if (sqlOperation.idInSubscription(id))
+                sqlOperation.setSubscribedValude(id, comboStore, comboCategory, comboRate, comboPayment, comment);
+
+
         }
     }
 
@@ -192,18 +219,41 @@ public class MainPanelController {
         comboStore.getSelectionModel().clearSelection();
         comboCategory.getSelectionModel().clearSelection();
         dateDate.getEditor().clear();
+        dateDate.setValue(null);
         comboPayment.getSelectionModel().clearSelection();
         comment.clear();
     }
 
     @FXML
     private void checkBoxAction() throws SQLException {
+        if(checkBox.isSelected())
+        {
+            comboCategory1.setDisable(true);
+            comboStore1.setDisable(true);
+            comboRate1.setDisable(true);
+        }
+        else
+        {
+            comboCategory1.setDisable(false);
+            comboStore1.setDisable(false);
+            comboRate1.setDisable(false);
+        }
         tableView.getItems().clear();
         rightPanel.showAllTransactions(firstColumn, secondColumn, thirdColumn, fourthColumn, fifthColumn, sixthColumn, tableView, id, checkBox.isSelected(),
                 comboStore1, comboCategory1, comboRate1);
     }
 
     @FXML
+    public void addSubscription(ActionEvent actionEvent) throws IOException {
+        windowOperation.goToNextWindow(actionEvent, "/resources/subscription.fxml", 600, 700);
+    }
+
+
+    @FXML
+    public void editPersonalData(ActionEvent actionEvent) throws IOException {
+        windowOperation.goToNextWindow(actionEvent, "/resources/personalInformation_panel.fxml", 600, 700);
+    }
+
     public void comboCategoryAction(ActionEvent actionEvent) throws SQLException {
         checkBoxAction();
     }
@@ -216,5 +266,9 @@ public class MainPanelController {
     @FXML
     public void comboRateAction(ActionEvent actionEvent) throws SQLException {
         checkBoxAction();
+    }
+
+    public void addRestriction(ActionEvent actionEvent) throws IOException {
+        windowOperation.goToNextWindow(actionEvent, "/resources/restriction_panel.fxml", 600, 700);
     }
 }

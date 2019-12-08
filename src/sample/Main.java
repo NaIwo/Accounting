@@ -16,6 +16,7 @@ public class Main extends Application {
         Image icon = new Image("resources/images/icon.jpg");
         primaryStage.getIcons().add(icon);
         primaryStage.setTitle("Moja Księgowość");
+        primaryStage.setResizable(false);
         primaryStage.setScene(new Scene(root, 600, 700));
         primaryStage.show();
     }

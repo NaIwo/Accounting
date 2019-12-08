@@ -9,13 +9,13 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import sample.sqloperation.SqlConnection;
 import sample.WindowOperation;
+import sample.sqloperation.SqlOperation;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 public class LoginController {
     @FXML
     private TextField loginLabel;
@@ -41,9 +41,10 @@ public class LoginController {
     @FXML
     private void loginButtonAction(ActionEvent actionEvent) throws IOException, SQLException {
         SqlConnection sqlConnection = new SqlConnection();
+        SqlOperation sqlOperation = new SqlOperation();
         if (sqlConnection.connect()) {
             WindowOperation window = new WindowOperation();
-            if (checkFields() && readData(sqlConnection.getConnection())) {
+            if (checkFields() && sqlOperation.readData(sqlConnection.getConnection(),loginLabel, passwordLabel)) {
                 loginLogin = loginLabel.getText();
                 window.goToNextWindow(actionEvent, "/resources/main_panel.fxml", 1200, 700);
             } else {
@@ -58,13 +59,5 @@ public class LoginController {
         return !loginLabel.getText().equals("") && !passwordLabel.getText().equals("");
     }
 
-    private boolean readData(Connection conn) throws SQLException {
-        boolean result;
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT login, haslo from Dane_logowania where login='" + loginLabel.getText() + "' and haslo='" + passwordLabel.getText() + "'");
-        result = rs.next();
-        rs.close();
-        stmt.close();
-        return result;
-    }
+
 }

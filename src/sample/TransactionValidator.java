@@ -1,8 +1,6 @@
 package sample;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.*;
 
 import java.time.LocalDate;
 
@@ -28,8 +26,22 @@ public class TransactionValidator {
         }
     }
 
-    private boolean checkTexField(String money) {
-        if (money.matches("^[0-9]+\\.[0-9][0-9]?$")) return true;
+    public boolean checkValidateForSubscription(ComboBox store, ComboBox category, ComboBox rate, ComboBox payment, TextField comment) {
+        WindowOperation windowOperation = new WindowOperation();
+
+        if (!store.getSelectionModel().isEmpty() || !category.getSelectionModel().isEmpty() || !rate.getSelectionModel().isEmpty()
+                || !payment.getSelectionModel().isEmpty() || !comment.getText().isEmpty()) {
+                return true;
+        } else {
+            windowOperation.warrningWindow("Błąd", "Nie wypełniono żadnego pola",
+                    "Wypełnij conajmniej jedno pole", Alert.AlertType.ERROR);
+            return false;
+        }
+    }
+
+
+    public boolean checkTexField(String money) {
+        if (money.matches("^[0-9]+\\.[0-9][0-9]?$") || money.matches("^[0-9]+$")) return true;
         else return false;
     }
 }
