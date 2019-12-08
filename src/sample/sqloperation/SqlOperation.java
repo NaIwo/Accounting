@@ -90,8 +90,10 @@ public class SqlOperation {
         stmt.setString(5, data.replaceAll("-", "/"));
         stmt.setString(6, sposob);
         stmt.setString(7, ocena);
-        if (komentarz != null) stmt.setString(8, komentarz);
-        else stmt.setNull(8, Types.VARCHAR);
+        if (komentarz != null) {
+            if (komentarz.length() > 50) stmt.setString(8, komentarz.substring(0, 50));
+            else stmt.setString(8, komentarz);
+        } else stmt.setNull(8, Types.VARCHAR);
 
 
         stmt.execute();
@@ -290,7 +292,7 @@ public class SqlOperation {
             streetLabel.setText(rs.getString(5));
             houseLabel.setText(rs.getString(6));
             if (rs.getInt(7) != 0) homeLabel.setText(rs.getString(7));
-            postcodeLabel.setText(rs.getString(8).substring(0,2) + "-" + rs.getString(8).substring(2, rs.getString(8).length()));
+            postcodeLabel.setText(rs.getString(8).substring(0, 2) + "-" + rs.getString(8).substring(2, rs.getString(8).length()));
             cityLabel.setText(rs.getString(9));
             emailLabel.setText(rs.getString(10));
             if (rs.getInt(11) != 0) phoneoneLabel.setText(rs.getString(10));
@@ -324,7 +326,7 @@ public class SqlOperation {
         return result;
     }
 
-    public void updateUserInformation(Connection connection, WindowOperation windowOperation, Integer id,  TextField[] allTextFields) throws SQLException {
+    public void updateUserInformation(Connection connection, WindowOperation windowOperation, Integer id, TextField[] allTextFields) throws SQLException {
 
         Statement info = connection.createStatement();
         ResultSet rs = info.executeQuery("SELECT A.ID_ADRESU, K.ID_KONTAKTU, D.LOGIN " +
@@ -336,25 +338,25 @@ public class SqlOperation {
 
         CallableStatement stmt = connection.prepareCall("{call updateUserInformation(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
-        if(rs.next())
-        {
+        if (rs.next()) {
             stmt.setString(1, allTextFields[0].getText());
             stmt.setString(2, allTextFields[1].getText());
             stmt.setString(3, allTextFields[12].getText());
             stmt.setString(4, allTextFields[10].getText());
             stmt.setString(5, allTextFields[2].getText());
             stmt.setInt(6, Integer.parseInt(allTextFields[3].getText().replaceAll(" ", "")));
-            if(!allTextFields[4].getText().isEmpty()) stmt.setInt(7, Integer.parseInt(allTextFields[4].getText().replaceAll(" ", "")));
+            if (!allTextFields[4].getText().isEmpty())
+                stmt.setInt(7, Integer.parseInt(allTextFields[4].getText().replaceAll(" ", "")));
             else stmt.setNull(7, Types.INTEGER);
             stmt.setInt(8, Integer.parseInt(allTextFields[5].getText().replaceAll("-", "").replaceAll(" ", "")));
             stmt.setString(9, allTextFields[6].getText());
             stmt.setString(10, allTextFields[7].getText());
-            if(!allTextFields[8].getText().isEmpty()) stmt.setInt(11, Integer.parseInt(allTextFields[8].getText()));
+            if (!allTextFields[8].getText().isEmpty()) stmt.setInt(11, Integer.parseInt(allTextFields[8].getText()));
             else stmt.setNull(11, Types.INTEGER);
-            if(!allTextFields[9].getText().isEmpty()) stmt.setInt(12, Integer.parseInt(allTextFields[9].getText()));
+            if (!allTextFields[9].getText().isEmpty()) stmt.setInt(12, Integer.parseInt(allTextFields[9].getText()));
             else stmt.setNull(12, Types.INTEGER);
             stmt.setInt(13, Integer.parseInt(rs.getString(1).replaceAll(" ", "")));
-            stmt.setInt(14, Integer.parseInt(rs.getString(2).replaceAll(" ","")));
+            stmt.setInt(14, Integer.parseInt(rs.getString(2).replaceAll(" ", "")));
             stmt.setString(15, rs.getString(3));
             stmt.setInt(16, id);
         }
@@ -369,13 +371,14 @@ public class SqlOperation {
     public void insertRestrictionToDatabase(Connection connection, WindowOperation windowOperation, TextField payment, TextField comment, ComboBox category, Integer id) throws SQLException {
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT ID_KATEGORII FROM KATEGORIE WHERE NAZWA_KATEGORII = '" + category.getValue().toString().toUpperCase() + "'");
-        if(rs.next()) {
-            if(!comment.getText().isEmpty())
-             stmt.executeUpdate("INSERT INTO OGRANICZENIA (ID_KLIENTA, ID_KATEGORII, WARTOSC_OGRANICZENIA, ALARM) VALUES" +
-                        "(" + id + ", " + rs.getInt(1) + ", " + Integer.parseInt(payment.getText().replaceAll(" ", "").replaceAll(",", ".")) + ", '" + comment.getText() + "')");
-            else
+        if (rs.next()) {
+            if (!comment.getText().isEmpty()) {
+                if (comment.getText().length() > 100) comment.setText(comment.getText().substring(0, 100));
                 stmt.executeUpdate("INSERT INTO OGRANICZENIA (ID_KLIENTA, ID_KATEGORII, WARTOSC_OGRANICZENIA, ALARM) VALUES" +
-                        "(" + id + ", " + rs.getInt(1) + ", " + Integer.parseInt(payment.getText().replaceAll(" ", "").replaceAll(",", ".")) + ", 'Następnym razem bądź bardziej rozważny.')");
+                        "(" + id + ", " + rs.getInt(1) + ", " + payment.getText().replaceAll(" ", "").replaceAll(",", ".") + ", '" + comment.getText() + "')");
+            } else
+                stmt.executeUpdate("INSERT INTO OGRANICZENIA (ID_KLIENTA, ID_KATEGORII, WARTOSC_OGRANICZENIA, ALARM) VALUES" +
+                        "(" + id + ", " + rs.getInt(1) + ", " + payment.getText().replaceAll(" ", "").replaceAll(",", ".") + ", 'Następnym razem bądź bardziej rozważny.')");
         }
         stmt.close();
         windowOperation.warrningWindow("Dodano ograniczenie", "Operacja przebiegła pomyślnie", "Ograniczenie zostało dodane do bazy danych", Alert.AlertType.INFORMATION);
@@ -387,7 +390,7 @@ public class SqlOperation {
         Statement stmt = connection.createStatement();
         ResultSet info = stmt.executeQuery("SELECT ID_KATEGORII FROM KATEGORIE WHERE NAZWA_KATEGORII = '" + category.getValue().toString().toUpperCase() + "'");
         ResultSet rs;
-        if(info.next()) {
+        if (info.next()) {
             rs = stmt.executeQuery("SELECT * FROM OGRANICZENIA O LEFT JOIN KATEGORIE K ON K.ID_KATEGORII=O.ID_KATEGORII " +
                     " WHERE O.ID_KATEGORII = " + info.getInt(1) + " AND O.ID_KLIENTA = " + id);
             if (rs.next()) {
@@ -397,29 +400,26 @@ public class SqlOperation {
                 stmt.close();
                 return false;
             }
-        }
-        else
+        } else
             return false;
     }
 
     public void updateRestrictionDatabase(Connection connection, WindowOperation windowOperation, TextField payment, TextField comment, ComboBox category, Integer id) throws SQLException {
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT ID_KATEGORII FROM KATEGORIE WHERE NAZWA_KATEGORII = '" + category.getValue().toString().toUpperCase() + "'");
-        if(rs.next()) {
-                if(!comment.getText().isEmpty())
-                {
-                    stmt.executeUpdate("UPDATE OGRANICZENIA " +
-                            "SET WARTOSC_OGRANICZENIA = " + Integer.parseInt(payment.getText().replaceAll(" ", "").replaceAll(",", ".")) + " " +
-                            ", ALARM = '" + comment.getText() +"' "+
-                            "WHERE ID_KATEGORII = "+ rs.getInt(1) + " AND ID_KLIENTA = "+ id);
-                }
-                else
-                {
-                    stmt.executeUpdate("UPDATE OGRANICZENIA " +
-                            "SET WARTOSC_OGRANICZENIA = " + Integer.parseInt(payment.getText().replaceAll(" ", "").replaceAll(",", ".")) + " " +
-                            ", ALARM = 'Nastpnym razem bądź bardziej rozważny.' "+
-                            "WHERE ID_KATEGORII = "+ rs.getInt(1) + " AND ID_KLIENTA = "+ id);
-                }
+        if (rs.next()) {
+            if (!comment.getText().isEmpty()) {
+                if (comment.getText().length() > 100) comment.setText(comment.getText().substring(0, 100));
+                stmt.executeUpdate("UPDATE OGRANICZENIA " +
+                        "SET WARTOSC_OGRANICZENIA = " + payment.getText().replaceAll(" ", "").replaceAll(",", ".") + " " +
+                        ", ALARM = '" + comment.getText() + "' " +
+                        "WHERE ID_KATEGORII = " + rs.getInt(1) + " AND ID_KLIENTA = " + id);
+            } else {
+                stmt.executeUpdate("UPDATE OGRANICZENIA " +
+                        "SET WARTOSC_OGRANICZENIA = " + payment.getText().replaceAll(" ", "").replaceAll(",", ".") + " " +
+                        ", ALARM = 'Nastpnym razem bądź bardziej rozważny.' " +
+                        "WHERE ID_KATEGORII = " + rs.getInt(1) + " AND ID_KLIENTA = " + id);
+            }
         }
         stmt.close();
         windowOperation.warrningWindow("Zmieniono ograniczenie", "Operacja przebiegła pomyślnie", "Ograniczenie zostało zmienione w bazie danych", Alert.AlertType.INFORMATION);
@@ -428,9 +428,9 @@ public class SqlOperation {
     public void deleteRestrictionFromDatabase(Connection connection, WindowOperation windowOperation, Integer id, ComboBox category) throws SQLException {
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT ID_KATEGORII FROM KATEGORIE WHERE NAZWA_KATEGORII = '" + category.getValue().toString().toUpperCase() + "'");
-        if(rs.next()) {
+        if (rs.next()) {
             stmt.executeUpdate("DELETE OGRANICZENIA " +
-                    "WHERE ID_KLIENTA = " + id + " AND ID_KATEGORII = " + rs.getInt(1) );
+                    "WHERE ID_KLIENTA = " + id + " AND ID_KATEGORII = " + rs.getInt(1));
         }
         stmt.close();
         windowOperation.warrningWindow("Usunięto ograniczenie", "Operacja przebiegła pomyślnie", "Ograniczenie zostało usunięte z bazy danych", Alert.AlertType.INFORMATION);
@@ -457,13 +457,12 @@ public class SqlOperation {
         Statement stmt = connection.createStatement();
 
         ResultSet rs = stmt.executeQuery("SELECT ID_KATEGORII FROM KATEGORIE WHERE NAZWA_KATEGORII = '" + category.getValue().toString().toUpperCase() + "'");
-        if(rs.next()) {
+        if (rs.next()) {
             ResultSet out;
             out = stmt.executeQuery("SELECT WARTOSC_OGRANICZENIA, ALARM FROM OGRANICZENIA " +
                     " WHERE ID_KLIENTA = " + id + " AND ID_KATEGORII = " + rs.getInt(1));
-            if(out.next())
-            {
-                if(checkCurrentCategory(connection, id, category) > out.getInt(1))
+            if (out.next()) {
+                if (checkCurrentCategory(connection, id, category) > out.getInt(1))
                     windowOperation.warrningWindow("UWAŻAJ!! ", "Przekroczono wartość ograniczenia!! ",
                             out.getString(2), Alert.AlertType.WARNING);
 

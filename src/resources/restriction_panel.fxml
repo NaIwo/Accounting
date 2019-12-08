@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="600.0" style="-fx-background-color: burlywood; -fx-border-color: black; -fx-border-width: 12;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.RestrictionPanelController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="600.0" style="-fx-background-color: burlywood; -fx-border-color: black; -fx-border-width: 12;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.RestrictionPanelController">
    <children>
       <Text layoutX="193.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ograniczenia">
          <font>
@@ -26,12 +26,12 @@
             </RadialGradient>
          </fill>
       </Text>
-      <TableView layoutX="12.0" layoutY="355.0" prefHeight="297.0" prefWidth="576.0">
+      <TableView fx:id="tableView" layoutX="12.0" layoutY="355.0" prefHeight="297.0" prefWidth="576.0">
         <columns>
-          <TableColumn prefWidth="120.0" text="Kategoria" />
-          <TableColumn prefWidth="132.800048828125" text="Wartość ograniczenia" />
-            <TableColumn prefWidth="116.79998779296875" text="Aktualny wydatek" />
-            <TableColumn prefWidth="207.20001220703125" text="Komentarz" />
+          <TableColumn fx:id="firstColumn" prefWidth="120.0" text="Kategoria" />
+          <TableColumn fx:id="secondColumn" prefWidth="132.800048828125" text="Wartość ograniczenia" />
+            <TableColumn fx:id="thirdColumn" prefWidth="116.79998779296875" text="Aktualny wydatek" />
+            <TableColumn fx:id="fourthColumn" prefWidth="207.20001220703125" text="Komentarz" />
         </columns>
       </TableView>
       <Text layoutX="141.0" layoutY="669.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ograniczenia nakładamy na kategorię na aktualny miesiąc, po jego przekroczeniu otrzymamy odpowiedni komunikat." textAlignment="CENTER" wrappingWidth="317.9867248535156">

@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.time.LocalDate;
 
 import static sample.controllers.NicknameController.loginRegistration;
@@ -29,6 +30,10 @@ public class MainPanelController {
     public CheckBox checkBox;
     @FXML
     public TableColumn sixthColumn;
+    @FXML
+    private DatePicker date1;
+    @FXML
+    private DatePicker date2;
     @FXML
     private ComboBox comboCategory1;
     @FXML
@@ -72,6 +77,7 @@ public class MainPanelController {
     private LocalDate localDate;
     private SqlOperation sqlOperation;
     private RightPanel rightPanel;
+    private boolean last = true;
 
     public MainPanelController() throws SQLException {
         windowOperation = new WindowOperation();
@@ -89,7 +95,7 @@ public class MainPanelController {
     }
 
 
-    public void initialize() throws SQLException {
+    public void initialize() throws SQLException, ParseException {
         sqlOperation.addStoresToMenu(comboStore, sqlConnection.getConnection());
         sqlOperation.addStoresToMenu(comboStore1, sqlConnection.getConnection());
         sqlOperation.addCategoriesToMenu(comboCategory, sqlConnection.getConnection());
@@ -118,7 +124,7 @@ public class MainPanelController {
     }
 
     @FXML
-    private void addStore(ActionEvent actionEvent) throws SQLException {
+    private void addStore() throws SQLException {
         if (!store.getText().replaceAll(" ", "").equals("")) {
             if (!sqlOperation.checkIfStoreExists(sqlConnection.getConnection(), store)) {
                 sqlOperation.addStoreToDatabase(sqlConnection.getConnection(), store, id, windowOperation);
@@ -133,7 +139,7 @@ public class MainPanelController {
     }
 
     @FXML
-    private void addCategory(ActionEvent actionEvent) throws SQLException {
+    private void addCategory() throws SQLException {
         if (!category.getText().replaceAll(" ", "").equals("")) {
             if (!sqlOperation.checkIfCategoryExists(sqlConnection.getConnection(), category)) {
                 sqlOperation.addCategoryToDatabase(sqlConnection.getConnection(), category, id, windowOperation);
@@ -159,10 +165,9 @@ public class MainPanelController {
     }
 
     @FXML
-    public void removeStore(ActionEvent actionEvent) throws SQLException {
+    public void removeStore() throws SQLException {
         if (!store.getText().replaceAll(" ", "").equals("")) {
             if (sqlOperation.checkIfStoreWasAddedByUser(sqlConnection.getConnection(), store, id)) {
-                System.out.println("Tutaj");
                 sqlOperation.removeStore(sqlConnection.getConnection(), store, windowOperation);
                 comboStore.getItems().remove(store.getText().toUpperCase());
                 comboStore1.getItems().remove(store.getText().toUpperCase());
@@ -175,7 +180,7 @@ public class MainPanelController {
     }
 
     @FXML
-    public void removeCategory(ActionEvent actionEvent) throws SQLException {
+    public void removeCategory() throws SQLException {
         if (!category.getText().replaceAll(" ", "").equals("")) {
             if (sqlOperation.checkIfCategoryWasAddedByUser(sqlConnection.getConnection(), category, id)) {
                 sqlOperation.removeCategory(sqlConnection.getConnection(), category, windowOperation);
@@ -190,9 +195,8 @@ public class MainPanelController {
     }
 
     @FXML
-    public void confirmButton(ActionEvent actionEvent) throws SQLException {
+    public void confirmButton() throws SQLException, ParseException {
         TransactionValidator transactionValidator = new TransactionValidator();
-
 
 
         if (transactionValidator.checkValidate(money.getText().replaceAll(",", "."), comboStore, comboCategory, comboRate, comboPayment, dateDate)) {
@@ -203,7 +207,7 @@ public class MainPanelController {
 
 
             sqlOperation.checkIfExceeded(sqlConnection.getConnection(), windowOperation, id, comboCategory);
-            //sprawdzenie czy nie przekrocozno ograniczenia
+
             clearAllFields();
             checkBoxAction();
             dateDate.setValue(localDate);
@@ -225,22 +229,30 @@ public class MainPanelController {
     }
 
     @FXML
-    private void checkBoxAction() throws SQLException {
+    private void checkBoxAction() throws SQLException, ParseException {
         if(checkBox.isSelected())
         {
             comboCategory1.setDisable(true);
             comboStore1.setDisable(true);
             comboRate1.setDisable(true);
+            if(!last) {
+                date1.getEditor().clear();
+                date2.getEditor().clear();
+                date1.setValue(null);
+                date2.setValue(null);
+                last = true;
+            }
         }
         else
         {
             comboCategory1.setDisable(false);
             comboStore1.setDisable(false);
             comboRate1.setDisable(false);
+            last = false;
         }
         tableView.getItems().clear();
         rightPanel.showAllTransactions(firstColumn, secondColumn, thirdColumn, fourthColumn, fifthColumn, sixthColumn, tableView, id, checkBox.isSelected(),
-                comboStore1, comboCategory1, comboRate1);
+                comboStore1, comboCategory1, comboRate1, date1, date2);
     }
 
     @FXML
@@ -254,21 +266,43 @@ public class MainPanelController {
         windowOperation.goToNextWindow(actionEvent, "/resources/personalInformation_panel.fxml", 600, 700);
     }
 
-    public void comboCategoryAction(ActionEvent actionEvent) throws SQLException {
+    public void comboCategoryAction() throws SQLException, ParseException {
         checkBoxAction();
     }
 
     @FXML
-    public void comboStoreAction(ActionEvent actionEvent) throws SQLException {
+    public void comboStoreAction() throws SQLException, ParseException {
         checkBoxAction();
     }
 
     @FXML
-    public void comboRateAction(ActionEvent actionEvent) throws SQLException {
+    public void comboRateAction() throws SQLException, ParseException {
         checkBoxAction();
     }
 
     public void addRestriction(ActionEvent actionEvent) throws IOException {
         windowOperation.goToNextWindow(actionEvent, "/resources/restriction_panel.fxml", 600, 700);
+    }
+
+    @FXML
+    private void date1Action() throws SQLException, ParseException {
+        if(date2.getValue() != null && date1.getValue() != null && checkDateValidation()) checkBoxAction();
+    }
+
+    @FXML
+    private void date2Action() throws SQLException, ParseException {
+        if(date1.getValue() != null && date2.getValue() != null && checkDateValidation()) checkBoxAction();
+    }
+
+    private boolean checkDateValidation() {
+        if(date2.getValue().compareTo(date1.getValue()) >= 0) return true;
+        else {
+            date1.getEditor().clear();
+            date2.getEditor().clear();
+            windowOperation.warrningWindow("Bład", "Niepoprawnie wybrane daty", "Popraw wybrane przez Ciebie daty", Alert.AlertType.ERROR);
+            date1.setValue(null);
+            date2.setValue(null);
+            return false;
+        }
     }
 }
