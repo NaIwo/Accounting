@@ -45,8 +45,40 @@ public class RegistrationController {
     private static Integer phoneone;
     private static Integer phonetwo;
 
+    public void initialize()
+    {
+        if(name != null)
+        {
+            nameLabel.setText(name);
+            surnameLabel.setText(surname);
+            streetLabel.setText(street);
+            houseLabel.setText(house.toString());
+            if(home != null) homeLabel.setText(home.toString());
+            postcodeLabel.setText(postalcode.toString().substring(0,2) + "-" + postalcode.toString().substring(2,postalcode.toString().length()));
+            cityLabel.setText(city);
+            emailLabel.setText(email);
+            if(phoneone != null) phoneoneLabel.setText(phoneone.toString());
+            if(phonetwo != null) phonetwoLabel.setText(phonetwo.toString());
+        }
+    }
+
+    public void clearVariable()
+    {
+        name = null;
+        surname = null;
+        street = null;
+        house = null;
+        home = null;
+        postalcode = null;
+        city = null;
+        email = null;
+        phoneone = null;
+        phonetwo = null;
+    }
+
     @FXML
     private void backButtonAction(ActionEvent actionEvent) throws IOException {
+        clearVariable();
         LoginController window = new LoginController();
         window.backButtonAction(actionEvent);
     }

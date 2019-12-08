@@ -25,6 +25,7 @@ public class Controller {
     private WindowOperation newWindow = new WindowOperation();
 
 
+
     @FXML
     private void closeButtonAction(ActionEvent actionEvent) {
         Stage stage = (Stage) closeButton.getScene().getWindow();
