@@ -40,7 +40,7 @@ public class TransactionValidator {
     }
 
 
-    private boolean checkTexField(String money) {
+    public boolean checkTexField(String money) {
         if (money.matches("^[0-9]+\\.[0-9][0-9]?$") || money.matches("^[0-9]+$")) return true;
         else return false;
     }

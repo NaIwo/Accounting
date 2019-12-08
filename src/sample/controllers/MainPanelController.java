@@ -98,6 +98,12 @@ public class MainPanelController {
         addRateToMenu(comboRate);
         addRateToMenu(comboRate1);
         sqlOperation.addPaymentToMenu(comboPayment, sqlConnection.getConnection());
+        if(checkBox.isSelected())
+        {
+            comboCategory1.setDisable(true);
+            comboStore1.setDisable(true);
+            comboRate1.setDisable(true);
+        }
         checkBoxAction();
         if (sqlOperation.idInSubscription(id))
             sqlOperation.setSubscribedValude(id, comboStore, comboCategory, comboRate, comboPayment, comment);
@@ -186,12 +192,18 @@ public class MainPanelController {
     @FXML
     public void confirmButton(ActionEvent actionEvent) throws SQLException {
         TransactionValidator transactionValidator = new TransactionValidator();
+
+
+
         if (transactionValidator.checkValidate(money.getText().replaceAll(",", "."), comboStore, comboCategory, comboRate, comboPayment, dateDate)) {
             sqlOperation.addTransaction(sqlConnection.getConnection(), windowOperation, id, money.getText(),
                     comboStore.getValue().toString().toUpperCase().split(" ")[0], comboCategory.getValue().toString().toUpperCase(),
                     dateDate.getValue().toString(), comboPayment.getValue().toString().toUpperCase(),
                     comboRate.getValue().toString(), comment.getText().toUpperCase());
 
+
+            sqlOperation.checkIfExceeded(sqlConnection.getConnection(), windowOperation, id, comboCategory);
+            //sprawdzenie czy nie przekrocozno ograniczenia
             clearAllFields();
             checkBoxAction();
             dateDate.setValue(localDate);
@@ -214,6 +226,18 @@ public class MainPanelController {
 
     @FXML
     private void checkBoxAction() throws SQLException {
+        if(checkBox.isSelected())
+        {
+            comboCategory1.setDisable(true);
+            comboStore1.setDisable(true);
+            comboRate1.setDisable(true);
+        }
+        else
+        {
+            comboCategory1.setDisable(false);
+            comboStore1.setDisable(false);
+            comboRate1.setDisable(false);
+        }
         tableView.getItems().clear();
         rightPanel.showAllTransactions(firstColumn, secondColumn, thirdColumn, fourthColumn, fifthColumn, sixthColumn, tableView, id, checkBox.isSelected(),
                 comboStore1, comboCategory1, comboRate1);
@@ -244,4 +268,7 @@ public class MainPanelController {
         checkBoxAction();
     }
 
+    public void addRestriction(ActionEvent actionEvent) throws IOException {
+        windowOperation.goToNextWindow(actionEvent, "/resources/restriction_panel.fxml", 600, 700);
+    }
 }

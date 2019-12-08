@@ -366,6 +366,112 @@ public class SqlOperation {
         windowOperation.warrningWindow("Dodano transakcję", "Operacja przebiegła pomyślnie", "Transakcja została dodana do bazy danych", Alert.AlertType.INFORMATION);
     }
 
+    public void insertRestrictionToDatabase(Connection connection, WindowOperation windowOperation, TextField payment, TextField comment, ComboBox category, Integer id) throws SQLException {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT ID_KATEGORII FROM KATEGORIE WHERE NAZWA_KATEGORII = '" + category.getValue().toString().toUpperCase() + "'");
+        if(rs.next()) {
+            if(!comment.getText().isEmpty())
+             stmt.executeUpdate("INSERT INTO OGRANICZENIA (ID_KLIENTA, ID_KATEGORII, WARTOSC_OGRANICZENIA, ALARM) VALUES" +
+                        "(" + id + ", " + rs.getInt(1) + ", " + Integer.parseInt(payment.getText().replaceAll(" ", "").replaceAll(",", ".")) + ", '" + comment.getText() + "')");
+            else
+                stmt.executeUpdate("INSERT INTO OGRANICZENIA (ID_KLIENTA, ID_KATEGORII, WARTOSC_OGRANICZENIA, ALARM) VALUES" +
+                        "(" + id + ", " + rs.getInt(1) + ", " + Integer.parseInt(payment.getText().replaceAll(" ", "").replaceAll(",", ".")) + ", 'Następnym razem bądź bardziej rozważny.')");
+        }
+        stmt.close();
+        windowOperation.warrningWindow("Dodano ograniczenie", "Operacja przebiegła pomyślnie", "Ograniczenie zostało dodane do bazy danych", Alert.AlertType.INFORMATION);
+    }
+
+
+    public Boolean checkCurrentRestriction(Connection connection, Integer id, ComboBox category) throws SQLException {
+
+        Statement stmt = connection.createStatement();
+        ResultSet info = stmt.executeQuery("SELECT ID_KATEGORII FROM KATEGORIE WHERE NAZWA_KATEGORII = '" + category.getValue().toString().toUpperCase() + "'");
+        ResultSet rs;
+        if(info.next()) {
+            rs = stmt.executeQuery("SELECT * FROM OGRANICZENIA O LEFT JOIN KATEGORIE K ON K.ID_KATEGORII=O.ID_KATEGORII " +
+                    " WHERE O.ID_KATEGORII = " + info.getInt(1) + " AND O.ID_KLIENTA = " + id);
+            if (rs.next()) {
+                stmt.close();
+                return true;
+            } else {
+                stmt.close();
+                return false;
+            }
+        }
+        else
+            return false;
+    }
+
+    public void updateRestrictionDatabase(Connection connection, WindowOperation windowOperation, TextField payment, TextField comment, ComboBox category, Integer id) throws SQLException {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT ID_KATEGORII FROM KATEGORIE WHERE NAZWA_KATEGORII = '" + category.getValue().toString().toUpperCase() + "'");
+        if(rs.next()) {
+                if(!comment.getText().isEmpty())
+                {
+                    stmt.executeUpdate("UPDATE OGRANICZENIA " +
+                            "SET WARTOSC_OGRANICZENIA = " + Integer.parseInt(payment.getText().replaceAll(" ", "").replaceAll(",", ".")) + " " +
+                            ", ALARM = '" + comment.getText() +"' "+
+                            "WHERE ID_KATEGORII = "+ rs.getInt(1) + " AND ID_KLIENTA = "+ id);
+                }
+                else
+                {
+                    stmt.executeUpdate("UPDATE OGRANICZENIA " +
+                            "SET WARTOSC_OGRANICZENIA = " + Integer.parseInt(payment.getText().replaceAll(" ", "").replaceAll(",", ".")) + " " +
+                            ", ALARM = 'Nastpnym razem bądź bardziej rozważny.' "+
+                            "WHERE ID_KATEGORII = "+ rs.getInt(1) + " AND ID_KLIENTA = "+ id);
+                }
+        }
+        stmt.close();
+        windowOperation.warrningWindow("Zmieniono ograniczenie", "Operacja przebiegła pomyślnie", "Ograniczenie zostało zmienione w bazie danych", Alert.AlertType.INFORMATION);
+    }
+
+    public void deleteRestrictionFromDatabase(Connection connection, WindowOperation windowOperation, Integer id, ComboBox category) throws SQLException {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT ID_KATEGORII FROM KATEGORIE WHERE NAZWA_KATEGORII = '" + category.getValue().toString().toUpperCase() + "'");
+        if(rs.next()) {
+            stmt.executeUpdate("DELETE OGRANICZENIA " +
+                    "WHERE ID_KLIENTA = " + id + " AND ID_KATEGORII = " + rs.getInt(1) );
+        }
+        stmt.close();
+        windowOperation.warrningWindow("Usunięto ograniczenie", "Operacja przebiegła pomyślnie", "Ograniczenie zostało usunięte z bazy danych", Alert.AlertType.INFORMATION);
+    }
+
+    public float checkCurrentCategory(Connection connection, Integer id, ComboBox category) throws SQLException {
+
+        float output;
+
+        CallableStatement stmt = connection.prepareCall("{? = call laczna_wartosc_na_kategorie(?, ?)}");
+
+        stmt.registerOutParameter(1, Types.FLOAT);
+
+        stmt.setInt(2, id);
+        stmt.setString(3, category.getValue().toString().toUpperCase());
+        stmt.execute();
+        output = stmt.getFloat(1);
+        stmt.close();
+
+        return output;
+    }
+
+    public void checkIfExceeded(Connection connection, WindowOperation windowOperation, Integer id, ComboBox category) throws SQLException {
+        Statement stmt = connection.createStatement();
+
+        ResultSet rs = stmt.executeQuery("SELECT ID_KATEGORII FROM KATEGORIE WHERE NAZWA_KATEGORII = '" + category.getValue().toString().toUpperCase() + "'");
+        if(rs.next()) {
+            ResultSet out;
+            out = stmt.executeQuery("SELECT WARTOSC_OGRANICZENIA, ALARM FROM OGRANICZENIA " +
+                    " WHERE ID_KLIENTA = " + id + " AND ID_KATEGORII = " + rs.getInt(1));
+            if(out.next())
+            {
+                if(checkCurrentCategory(connection, id, category) > out.getInt(1))
+                    windowOperation.warrningWindow("UWAŻAJ!! ", "Przekroczono wartość ograniczenia!! ",
+                            out.getString(2), Alert.AlertType.WARNING);
+
+            }
+        }
+        stmt.close();
+
+    }
 }
 
 
