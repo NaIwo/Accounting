@@ -215,7 +215,7 @@ public class SqlOperation {
     }
 
 
-    public Boolean idInSubscription(int id) throws SQLException {
+    public boolean idInSubscription(int id) throws SQLException {
         SqlConnection sqlConnection = new SqlConnection();
         Statement stmt = sqlConnection.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery("SELECT * from subskrypcje where id_klienta = " + id);
@@ -385,7 +385,7 @@ public class SqlOperation {
     }
 
 
-    public Boolean checkCurrentRestriction(Connection connection, Integer id, ComboBox category) throws SQLException {
+    public boolean checkCurrentRestriction(Connection connection, Integer id, ComboBox category) throws SQLException {
 
         Statement stmt = connection.createStatement();
         ResultSet info = stmt.executeQuery("SELECT ID_KATEGORII FROM KATEGORIE WHERE NAZWA_KATEGORII = '" + category.getValue().toString().toUpperCase() + "'");
