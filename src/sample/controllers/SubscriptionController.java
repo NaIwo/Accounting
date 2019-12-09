@@ -8,7 +8,9 @@ import sample.TransactionValidator;
 import sample.WindowOperation;
 import sample.sqloperation.SqlConnection;
 import sample.sqloperation.SqlOperation;
+
 import static sample.controllers.MainPanelController.id;
+
 import java.awt.*;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -28,7 +30,6 @@ public class SubscriptionController {
     private TextField CommentPanel;
 
 
-
     public void initialize() throws SQLException {
         SqlOperation SQLoperation = new SqlOperation();
         SqlConnection connection = new SqlConnection();
@@ -39,13 +40,16 @@ public class SubscriptionController {
         if (SQLoperation.idInSubscription(id)) {
             SQLoperation.setSubscribedValude(id, ShopPanel, CategoryPanel, MarkPanel, PaymentPanel, CommentPanel);
         }
+        MarkPanel.getItems().add(0);
     }
+
     private void addRateToMenu(ComboBox comboBox) {
         //comboBox.getItems().removeAll(comboBox.getItems());
         for (int i = 1; i < 6; i++) {
             comboBox.getItems().add(i);
         }
     }
+
     public void saveChanges(ActionEvent actionEvent) throws IOException, SQLException {
         WindowOperation window = new WindowOperation();
         TransactionValidator validator = new TransactionValidator();
@@ -55,15 +59,17 @@ public class SubscriptionController {
         if (validator.checkValidateForSubscription(ShopPanel, CategoryPanel, MarkPanel, PaymentPanel, CommentPanel)) {
 
             if (SQLoperation.idInSubscription(id)) {
-                if(!CommentPanel.getText().isEmpty())
+                if (!CommentPanel.getText().isEmpty()) {
+                    if (CommentPanel.getText().length() > 50)
+                        CommentPanel.setText(CommentPanel.getText().substring(0, 50));
                     SQLoperation.updateSubscriptionToDatabase(connection.getConnection(), window, id, ShopPanel, CategoryPanel, MarkPanel, PaymentPanel, CommentPanel.getText().toUpperCase());
-                else
+                } else
                     SQLoperation.updateSubscriptionToDatabase(connection.getConnection(), window, id, ShopPanel, CategoryPanel, MarkPanel, PaymentPanel, null);
-            } else
-            {
-                if(!CommentPanel.getText().isEmpty())
+            } else {
+                if (!CommentPanel.getText().isEmpty()) {
+                    if (CommentPanel.getText().length() > 50) CommentPanel.setText(CommentPanel.getText().substring(0, 50));
                     SQLoperation.insertSubscriptionToDatabase(connection.getConnection(), window, id, ShopPanel, CategoryPanel, MarkPanel, PaymentPanel, CommentPanel.getText().toUpperCase());
-                else
+                } else
                     SQLoperation.insertSubscriptionToDatabase(connection.getConnection(), window, id, ShopPanel, CategoryPanel, MarkPanel, PaymentPanel, null);
             }
 
