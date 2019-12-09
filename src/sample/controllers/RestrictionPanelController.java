@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import sample.Restriction;
 import sample.TransactionValidator;
 import sample.WindowOperation;
@@ -113,6 +114,9 @@ public class RestrictionPanelController {
         else {
             sqlOperation.deleteRestrictionFromDatabase(sqlConnection.getConnection(), windowOperation, id, categoryController);
             getDataToTable();
+            payment.clear();
+            comment.clear();
+            categoryController.getSelectionModel().clearSelection();
         }
     }
 
@@ -121,11 +125,36 @@ public class RestrictionPanelController {
         Statement stmt = sqlConnection.getConnection().createStatement();
         ResultSet rs = stmt.executeQuery("select (select nazwa_kategorii from kategorie where p.id_kategorii=id_kategorii), wartosc_ograniczenia, alarm" +
                 ", (select sum(p.kwota) from platnosci p join transakcje t on p.id_platnosci=t.id_platnosci where t.id_klienta="
-                + id + "and t.id_kategorii=p.id_kategorii) from ograniczenia p where id_klienta=" + id);
+                + id + "and t.id_kategorii=p.id_kategorii and t.data between extract(year from current_date) || '/' || extract(month from current_date) || '/01' and current_date) from ograniczenia p where id_klienta=" + id);
         while(rs.next()) {
             tableView.getItems().add(new Restriction(rs.getString(1), rs.getDouble(2), rs.getDouble(4), rs.getString(3)));
         }
         rs.close();
         stmt.close();
+    }
+
+    @FXML
+    public void tableViewAction(MouseEvent mouseEvent) {
+
+        TablePosition pos = (TablePosition) tableView.getSelectionModel().getSelectedCells().get(0);
+
+        if(!pos.toString().contains("null"))
+        {
+            int row = pos.getRow();
+
+            // Item here is the table view type:
+            Restriction item = (Restriction) tableView.getItems().get(row);
+
+            //TableColumn col = pos.getTableColumn();
+
+            // this gives the value in the selected cell:
+            String data = (String) firstColumn.getCellObservableValue(item).getValue();
+            categoryController.getSelectionModel().select(data);
+            data = secondColumn.getCellObservableValue(item).getValue().toString();
+            payment.setText(data);
+            data = fourthColumn.getCellObservableValue(item).getValue().toString();
+            comment.setText(data);
+        }
+
     }
 }

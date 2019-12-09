@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: burlywood; -fx-border-color: black; -fx-border-width: 12;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.MainPanelController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: burlywood; -fx-border-color: black; -fx-border-width: 12;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.MainPanelController">
    <children>
       <Separator layoutX="589.0" layoutY="13.0" orientation="VERTICAL" prefHeight="675.0" prefWidth="12.0" />
       <TableView fx:id="tableView" layoutX="595.0" layoutY="116.0" prefHeight="572.0" prefWidth="593.0" style="-fx-background-color: lightslategrey;">
@@ -84,9 +84,9 @@
       </CheckBox>
       <DatePicker fx:id="date1" layoutX="835.0" layoutY="24.0" onAction="#date1Action" prefHeight="25.0" prefWidth="95.0" promptText="Od" />
       <DatePicker fx:id="date2" layoutX="962.0" layoutY="24.0" onAction="#date2Action" prefHeight="25.0" prefWidth="87.0" promptText="Do" />
-      <ComboBox fx:id="comboCategory1" editable="true" layoutX="611.0" layoutY="68.0" onAction="#comboCategoryAction" prefHeight="25.0" prefWidth="125.0" promptText="Kategoria" />
-      <ComboBox fx:id="comboStore1" editable="true" layoutX="824.0" layoutY="68.0" onAction="#comboStoreAction" prefHeight="25.0" prefWidth="106.0" promptText="Sklep" style="-fx-background-color: antiquewhite;" />
-      <ComboBox fx:id="comboRate1" layoutX="1049.0" layoutY="68.0" onAction="#comboRateAction" prefHeight="25.0" prefWidth="95.0" promptText="Ocena" />
+      <ComboBox fx:id="comboCategory1" editable="true" layoutX="773.0" layoutY="68.0" onAction="#comboCategoryAction" prefHeight="25.0" prefWidth="125.0" promptText="Kategoria" />
+      <ComboBox fx:id="comboStore1" editable="true" layoutX="601.0" layoutY="69.0" onAction="#comboStoreAction" prefHeight="25.0" prefWidth="106.0" promptText="Sklep" style="-fx-background-color: antiquewhite;" />
+      <ComboBox fx:id="comboRate1" layoutX="958.0" layoutY="68.0" onAction="#comboRateAction" prefHeight="25.0" prefWidth="95.0" promptText="Ocena" />
       <Button layoutX="431.0" layoutY="572.0" mnemonicParsing="false" onAction="#editPersonalData" prefHeight="34.0" prefWidth="125.0" style="-fx-background-color: gold;" text="Edycja danych">
          <font>
             <Font name="Arial Bold Italic" size="11.0" />
